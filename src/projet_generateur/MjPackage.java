@@ -2,11 +2,11 @@ package projet_generateur;
 
 import java.util.ArrayList;
 
-public class MjClass {
+public class MjPackage {
 	String name;
 	ArrayList<MjClass> classes;
 	
-	public MjClass(){}
+	public MjPackage(){}
 	
 	public String getName() {
 		return name;
@@ -14,7 +14,12 @@ public class MjClass {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+	public ArrayList<MjClass> getClasses() {
+		return classes;
+	}
+	public void setClasses(ArrayList<MjClass> classes) {
+		this.classes = classes;
+	}
 	
 	
 }
