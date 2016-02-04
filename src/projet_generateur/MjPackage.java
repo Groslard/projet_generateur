@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MjPackage {
 	String name;
-	ArrayList<MjClass> classes;
+	ArrayList<MjEntity> classes;
 	
 	public MjPackage(){}
 	
@@ -14,10 +14,10 @@ public class MjPackage {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<MjClass> getClasses() {
+	public ArrayList<MjEntity> getClasses() {
 		return classes;
 	}
-	public void setClasses(ArrayList<MjClass> classes) {
+	public void setClasses(ArrayList<MjEntity> classes) {
 		this.classes = classes;
 	}
 	

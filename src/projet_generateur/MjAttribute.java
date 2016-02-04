@@ -1,10 +1,8 @@
 package projet_generateur;
 
-import java.util.ArrayList;
-
 public class MjAttribute {
 	String name;
-	Class type;
+	MjType type;
 	
 	public MjAttribute(){}
 
@@ -16,11 +14,11 @@ public class MjAttribute {
 		this.name = name;
 	}
 
-	public Class getType() {
+	public MjType getType() {
 		return type;
 	}
 
-	public void setType(Class type) {
+	public void setType(MjType type) {
 		this.type = type;
 	}
 	

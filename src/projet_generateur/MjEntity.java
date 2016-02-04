@@ -2,11 +2,11 @@ package projet_generateur;
 
 import java.util.ArrayList;
 
-public class MjClass {
+public class MjEntity {
 	String name;
 	ArrayList<MjAttribute> attributes;
 	
-	public MjClass(){}
+	public MjEntity(){}
 	
 	public String getName() {
 		return name;
