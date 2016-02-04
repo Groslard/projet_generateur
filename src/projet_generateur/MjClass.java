@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class MjClass {
 	String name;
-	ArrayList<MjClass> classes;
+	ArrayList<MjAttribute> attributes;
 	
 	public MjClass(){}
 	
