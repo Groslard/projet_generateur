@@ -4,7 +4,9 @@ public class MjAttribute {
 	String name;
 	MjType type;
 	
-	public MjAttribute(){}
+	public MjAttribute(String name){
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;

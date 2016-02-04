@@ -6,13 +6,20 @@ public class MjEntity {
 	String name;
 	ArrayList<MjAttribute> attributes;
 	
-	public MjEntity(){}
+	public MjEntity(String name){
+		this.name = name;
+		attributes = new ArrayList<MjAttribute>(); 
+	}
 	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void addAttribute(MjAttribute attribute) {
+		attributes.add(attribute);
 	}
 	
 	
