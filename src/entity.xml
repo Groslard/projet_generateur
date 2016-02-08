@@ -3,6 +3,7 @@
 	<entity name="Balise">
 		<attribute name="Nom" type="Coucou"/>
 		<attribute name="Numero" type="int" />
+		<attribute name="positions" type="list" list-type="int" />
 	</entity>
 	<entity name="Coucou">
 		<attribute name="Nom" type="String"/>
