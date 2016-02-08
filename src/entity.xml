@@ -2,7 +2,7 @@
 <package name="GrosPaquet">
 	<entity name="Balise">
 		<attribute name="Nom" type="Coucou"/>
-		<attribute name="Numero" type="int"/>
+		<attribute name="Numero" type="int" />
 	</entity>
 	<entity name="Coucou">
 		<attribute name="Nom" type="String"/>

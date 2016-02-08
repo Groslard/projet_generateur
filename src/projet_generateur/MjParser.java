@@ -99,7 +99,7 @@ public class MjParser {
         if(typeName == null)
         	return null;
         
-        attribute.setType(new MjReference(typeName));
+        attribute.setType(new MjType(typeName));
         
         return attribute;
 	}
