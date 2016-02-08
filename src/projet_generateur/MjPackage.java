@@ -43,4 +43,9 @@ public class MjPackage {
 			res+="\n"+entity;
 		return res;
 	}
+	
+	 public void accept(GenerateurVisitor visitor){
+		 visitor.visit(this);
+		 
+	 }
 }

@@ -29,4 +29,9 @@ public class MjAttribute {
 		return "\n\tMjAttribute [name=" + name + ", type=" + type + "]";
 	}
 	
+	
+	 public void accept(GenerateurVisitor visitor){
+		 visitor.visit(this);
+		 
+	 }
 }
