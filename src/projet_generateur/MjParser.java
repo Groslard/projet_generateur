@@ -95,12 +95,11 @@ public class MjParser {
 		MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
 		
         String typeName = attributeNode.getAttribute("type");
-        MjEntity entityType = primitifPackage.getEntity(typeName); 
         
-        if(entityType == null)
+        if(typeName == null)
         	return null;
         
-        attribute.setType(new MjReference(entityType));
+        attribute.setType(new MjReference(typeName));
         
         return attribute;
 	}
