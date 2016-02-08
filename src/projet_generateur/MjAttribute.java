@@ -24,5 +24,9 @@ public class MjAttribute {
 		this.type = type;
 	}
 	
+	@Override
+	public String toString() {
+		return "\n\tMjAttribute [name=" + name + ", type=" + type + "]";
+	}
 	
 }

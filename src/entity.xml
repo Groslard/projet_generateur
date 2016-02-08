@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package name="GrosPaquet">
+	<entity name="Balise">
+		<attribute name="Nom" type="String"/>
+		<attribute name="Numero" type="int"/>
+	</entity>
+	<entity name="Coucu">
+		<attribute name="Nom" type="String"/>
+		<attribute name="Numero" type="int"/>
+	</entity>
+</package>

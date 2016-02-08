@@ -22,6 +22,9 @@ public class MjEntity {
 		attributes.add(attribute);
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "MjEntity [name=" + name + ", attributes=" + attributes + "]";
+	}
 	
 }
