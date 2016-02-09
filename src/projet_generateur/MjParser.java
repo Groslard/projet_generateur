@@ -58,8 +58,10 @@ public class MjParser {
 	/** VISIT METHODS **/
 	public MjPackage readPackageNode(Element packageNode) {
 		MjPackage pkg = new MjPackage(packageNode.getAttribute("name"));
-		packageNode.getElementsByTagName("listdef");
-		packageNode.getElementsByTagName("refdef");
+		
+		instantiateRefTypes(packageNode.getElementsByTagName("refdef"));
+		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
+		
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -96,6 +98,22 @@ public class MjParser {
         return attribute;
 	}
 	
+	public void instantiateRefTypes(NodeList refTypes){
+		for(int i=0; i<refTypes.getLength(); i++){
+			Element refNode = (Element)refTypes.item(i);
+			MjReference ref = new MjReference(refNode.getAttribute("type"));
+			this.types.put(refNode.getAttribute("id"), ref);
+		}
+	}
+	
+	public void instantiateListTypes(NodeList listTypes){
+		for(int i=0; i<listTypes.getLength(); i++){
+			Element listNode = (Element)listTypes.item(i);
+			MjType type = this.types.get(listNode.getAttribute("type-list-id"));
+			MjList list = new MjList(type);
+			this.types.put(listNode.getAttribute("id"), list);
+		}
+	}
 	
 //	public MjType readTypeNode(Element attributeNode){
 //		String min = attributeNode.getAttribute("min");

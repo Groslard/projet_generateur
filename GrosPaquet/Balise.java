@@ -1,37 +1,26 @@
 package GrosPaquet;
 
-import java.awt.List;
-
 public class Balise {
-	private Coucou nom;
-	private int numero;
-	private int positions;
+	private Arraylist<Arraylist<String>> liste_a;
+	private String monstring;
 
 	public Balise() {
 	}
 
-	public void setnom(Coucou nom) {
-		this.nom = nom;
+	public void setliste_a(Arraylist<Arraylist<String>> liste_a) {
+		this.liste_a = liste_a;
 	}
 
-	public Coucou getnom() {
-		return nom;
+	public Arraylist<Arraylist<String>> getliste_a() {
+		return liste_a;
 	}
 
-	public void setnumero(int numero) {
-		this.numero = numero;
+	public void setmonstring(String monstring) {
+		this.monstring = monstring;
 	}
 
-	public int getnumero() {
-		return numero;
-	}
-
-	public void setpositions(int positions) {
-		this.positions = positions;
-	}
-
-	public int getpositions() {
-		return positions;
+	public String getmonstring() {
+		return monstring;
 	}
 
 }
