@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package name="GrosPaquet">
+	<types>
+		<typedef type="list" id="1" type-list-id="3"/>
+		<typedef type="list^2" id="2" type-list-id="1"/>
+		<typedef type="String" id="3"/>
+	</types>
+	
 	<entity name="Balise">
 		<attribute name="Nom" type="Coucou"/>
 		<attribute name="Numero" type="int" />
-		<attribute name="positions" type="list" list-type="int" />
+		
+		<attribute type-id="1" name="liste_a"/>
+		<attribute type-id="3" name="monString"/>
+		
+			
 	</entity>
 	<entity name="Coucou">
 		<attribute name="Nom" type="String"/>

@@ -1,14 +1,15 @@
 package projet_generateur;
 
 public class MjList extends MjType {
+	MjType type;
 	// minimum variables in the list
 	int min;
-	
 	// Maximum variables in the list (0 if no limits)
 	int max;
 	
-	public MjList(String entityName, int min, int max) {
-		super(entityName);
+	public MjList(MjType type, int min, int max) {
+		super();
+		this.type = type;
 		this.min = min;
 		this.max = max;
 	}
@@ -27,6 +28,6 @@ public class MjList extends MjType {
 	
 	@Override
 	public String toString() {
-		return "MjList [entity=" + entityName + ", min=" + min + ", max=" + max + "]";
+		return "MjList [entity=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 }

@@ -85,20 +85,28 @@ public class MjParser {
         
         if(typeName == null)
         	return null;
-        if(typeName.equals("list")){
-        	
-        	String min = attributeNode.getAttribute("min");
-        	String max = attributeNode.getAttribute("max");
-        	System.out.println(min.isEmpty());
-        	attribute.setType(new MjList(attributeNode.getAttribute("list-type"), 
-        			(min.isEmpty())?0:Integer.parseInt(min), 
-        			(max.isEmpty())?0:Integer.parseInt(max)));
-        }else{
-        	attribute.setType(new MjType(typeName));
-        }
+		attribute.setType(new MjReference(typeName));
+        return attribute;
+	}
+	
+	public MjAttribute readListNode(Element attributeNode){
+		MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
+		
+		MjType type = readTypeNode(attributeNode.getChildNodes().item(0));
+		attribute.setType(type);
+		return attribute;
+    	
+	}
+	
+	public MjType readTypeNode(Element attributeNode){
+		String min = attributeNode.getAttribute("min");
+    	String max = attributeNode.getAttribute("max");
+    	
+    	// tester si c est un noeud type ou list
+    	attribute.setType(new MjList(attributeNode.getAttribute("list-type"), 
+    			(min.isEmpty())?0:Integer.parseInt(min), 
+    			(max.isEmpty())?0:Integer.parseInt(max)));
         
         return attribute;
-        
-        
 	}
 }
