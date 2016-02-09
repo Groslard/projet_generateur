@@ -1,6 +1,7 @@
 package projet_generateur;
 
 public class MjReference extends MjType {
+	String name="reference";
 	String entityName;
 
 	

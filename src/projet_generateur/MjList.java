@@ -1,6 +1,7 @@
 package projet_generateur;
 
 public class MjList extends MjType {
+	String name = "list";
 	MjType type;
 	// minimum variables in the list
 	int min;
