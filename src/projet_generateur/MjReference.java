@@ -5,6 +5,32 @@ public class MjReference extends MjType {
 	String entityName;
 
 	
+	public MjReference() {
+		super();
+		typename="reference";
+	}
+
+	
+	
+	
+	public  String getTypeName(){
+		return entityName;
+	}
+	
+	
+	
+	
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
 	public MjReference(String entityName) {
 		super();
 		this.entityName = entityName;
