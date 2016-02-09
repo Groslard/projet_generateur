@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package name="GrosPaquet">
 	<types>
-		<typedef type="list" id="1" type-list-id="3"/>
-		<typedef type="list^2" id="2" type-list-id="1"/>
-		<typedef type="String" id="3"/>
+		<listdef id=1 type="list-string"  type-list-id="3"/>
+		<listdef id=2 type="list-list-string" type-list-id="1"/>
+		<refdef id=3 type="String" />
+		<refdef id=4 type="int" />
 	</types>
 	
-	<entity name="Balise">
-		<attribute name="Nom" type="Coucou"/>
-		<attribute name="Numero" type="int" />
-		
-		<attribute type-id="1" name="liste_a"/>
-		<attribute type-id="3" name="monString"/>
-		
-			
+	<entity name="Balise">		
+		<attribute name="liste_a" type-id=2 />
+		<attribute name="monString" type-id=3 />
 	</entity>
+	
 	<entity name="Coucou">
-		<attribute name="Nom" type="String"/>
-		<attribute name="Numero" type="int"/>
+		<attribute name="Nom" type-id=3/>
+		<attribute name="Numero" type-id=4/>
 	</entity>
 </package>

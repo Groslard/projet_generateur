@@ -2,10 +2,12 @@ package projet_generateur;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,10 +17,14 @@ import org.xml.sax.SAXException;
 public class MjParser {
 	Document document;
 	MjPackage primitifPackage;
+	HashMap<String, MjType> types;
 
 	/** CONSTRUCTOR **/
 	public MjParser(String xmlPath) {
 		super();
+		
+		types = new HashMap<String, MjType>();
+		
 		final DocumentBuilderFactory factory = DocumentBuilderFactory
 				.newInstance();
 
@@ -52,7 +58,8 @@ public class MjParser {
 	/** VISIT METHODS **/
 	public MjPackage readPackageNode(Element packageNode) {
 		MjPackage pkg = new MjPackage(packageNode.getAttribute("name"));
-
+		packageNode.getElementsByTagName("listdef");
+		packageNode.getElementsByTagName("refdef");
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -85,28 +92,21 @@ public class MjParser {
         
         if(typeName == null)
         	return null;
-		attribute.setType(new MjReference(typeName));
+		attribute.setType(this.types.get(attributeNode.getAttribute("type-id")));
         return attribute;
 	}
 	
-	public MjAttribute readListNode(Element attributeNode){
-		MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
-		
-		MjType type = readTypeNode(attributeNode.getChildNodes().item(0));
-		attribute.setType(type);
-		return attribute;
-    	
-	}
 	
-	public MjType readTypeNode(Element attributeNode){
-		String min = attributeNode.getAttribute("min");
-    	String max = attributeNode.getAttribute("max");
-    	
-    	// tester si c est un noeud type ou list
-    	attribute.setType(new MjList(attributeNode.getAttribute("list-type"), 
-    			(min.isEmpty())?0:Integer.parseInt(min), 
-    			(max.isEmpty())?0:Integer.parseInt(max)));
-        
-        return attribute;
-	}
+//	public MjType readTypeNode(Element attributeNode){
+//		String min = attributeNode.getAttribute("min");
+//    	String max = attributeNode.getAttribute("max");
+//    	
+//    	MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
+//		// tester si c est un noeud type ou list
+////    	attribute .setType(new MjList(attributeNode.getAttribute("list-type"), 
+////    			(min.isEmpty())?0:Integer.parseInt(min), 
+////    			(max.isEmpty())?0:Integer.parseInt(max)));
+//        
+//        return attribute;
+//	}
 }
