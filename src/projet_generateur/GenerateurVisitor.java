@@ -91,7 +91,7 @@ public void exportclass(HashMap<String, String> lesclass){
 	@Override
 	public void visit(MjAttribute o) {
 		
-		declarationBloc += "private "+o.type.entityName+" "+(o.name).toLowerCase() + "; \n";
+		declarationBloc += "private "+o.type.getTypeName()+" "+(o.name).toLowerCase() + "; \n";
 		methodBloc+=buildSetter(o);
 		methodBloc += buildGetter(o);
 	
@@ -99,7 +99,7 @@ public void exportclass(HashMap<String, String> lesclass){
 
 	private String buildSetter(MjAttribute o) {
 		String setter="";
-		setter+="public void set" + o.name.toLowerCase() + "("+o.type.entityName+" "+o.name.toLowerCase()+"){\nthis." + o.name.toLowerCase()+"="+o.name.toLowerCase()+";\n }\n";
+		setter+="public void set" + o.name.toLowerCase() + "("+o.type.getTypeName()+" "+o.name.toLowerCase()+"){\nthis." + o.name.toLowerCase()+"="+o.name.toLowerCase()+";\n }\n";
 		
 		return setter;
 	}
@@ -109,7 +109,7 @@ public void exportclass(HashMap<String, String> lesclass){
 	
 	private String buildGetter(MjAttribute o) {
 		String getter="";
-		getter+="public "+o.type.entityName+ " get" + o.name.toLowerCase() + "(){\nreturn " + o.name.toLowerCase()+";\n }\n";
+		getter+="public "+o.type.getTypeName()+ " get" + o.name.toLowerCase() + "(){\nreturn " + o.name.toLowerCase()+";\n }\n";
 		return getter;
 	}
 

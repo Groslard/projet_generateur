@@ -2,7 +2,7 @@
 <package name="GrosPaquet">
 	<types>
 		<typedef type="list" id="1" type-list-id="3"/>
-		<typedef type="list^2" id="2" type-list-id="1"/>
+		<typedef type="list2" id="2" type-list-id="1"/>
 		<typedef type="String" id="3"/>
 	</types>
 	
