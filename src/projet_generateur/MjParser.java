@@ -2,6 +2,7 @@ package projet_generateur;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,7 +17,6 @@ import org.xml.sax.SAXException;
 
 public class MjParser {
 	Document document;
-	MjPackage primitifPackage;
 	HashMap<String, MjType> types;
 
 	/** CONSTRUCTOR **/
@@ -35,8 +35,6 @@ public class MjParser {
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
-
-		primitifPackage = MjPackage.getJavaPrimitives();
 	}
 
 	/** GETTERS SETTERS **/
@@ -48,6 +46,15 @@ public class MjParser {
 		this.document = document;
 	}
 
+	/** JAVA PRIMITIVES **/
+	public static ArrayList<MjType> getJavaPrimitives(){
+		// au lieu de creer des entity, faire des reftype avec les primitives
+		ArrayList<MjType> primitives = new ArrayList<MjType>();
+		primitives.add(new MjReference("String"));
+		primitives.add(new MjReference("int"));
+		return primitives;
+	}
+	
 	/** EXPORT **/
 	public MjPackage getMetaInstance() {
 		MjPackage pkg = readPackageNode(document.getDocumentElement());
@@ -55,12 +62,16 @@ public class MjParser {
 		return pkg;
 	}
 
-	/** VISIT METHODS **/
+	/** READER METHODS **/
 	public MjPackage readPackageNode(Element packageNode) {
 		MjPackage pkg = new MjPackage(packageNode.getAttribute("name"));
 		
+		// Initialisation des types
+		instanciatePrimitivesTypes(getJavaPrimitives());
+		instantiateEntityTypes(packageNode.getElementsByTagName("entity"));
 		instantiateRefTypes(packageNode.getElementsByTagName("refdef"));
 		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
+		
 		
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -98,33 +109,40 @@ public class MjParser {
         return attribute;
 	}
 	
-	public void instantiateRefTypes(NodeList refTypes){
-		for(int i=0; i<refTypes.getLength(); i++){
-			Element refNode = (Element)refTypes.item(i);
-			MjReference ref = new MjReference(refNode.getAttribute("type"));
+	
+	/** TYPES INSTANTIATION **/
+	public void instantiateRefTypes(NodeList typeNodes){
+		for(int i=0; i<typeNodes.getLength(); i++){
+			// regarder ici si c est deja present dans les primitives 
+			Element refNode = (Element)typeNodes.item(i);
+			MjReference ref = new MjReference(refNode.getAttribute("id"));
 			this.types.put(refNode.getAttribute("id"), ref);
 		}
 	}
 	
-	public void instantiateListTypes(NodeList listTypes){
-		for(int i=0; i<listTypes.getLength(); i++){
-			Element listNode = (Element)listTypes.item(i);
-			MjType type = this.types.get(listNode.getAttribute("type-list-id"));
-			MjList list = new MjList(type);
-			this.types.put(listNode.getAttribute("id"), list);
+	public void instantiateListTypes(NodeList listNodes){
+		for(int i=0; i<listNodes.getLength(); i++){
+			Element listNode = (Element)listNodes.item(i);
+			MjType type = this.types.get(listNode.getAttribute("type-list"));
+			MjList list = new MjList(listNode.getAttribute("id"), type);
+			this.types.put(list.getId(), list);
 		}
 	}
 	
-//	public MjType readTypeNode(Element attributeNode){
-//		String min = attributeNode.getAttribute("min");
-//    	String max = attributeNode.getAttribute("max");
-//    	
-//    	MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
-//		// tester si c est un noeud type ou list
-////    	attribute .setType(new MjList(attributeNode.getAttribute("list-type"), 
-////    			(min.isEmpty())?0:Integer.parseInt(min), 
-////    			(max.isEmpty())?0:Integer.parseInt(max)));
-//        
-//        return attribute;
-//	}
+	public void instantiateEntityTypes(NodeList entityNodes){
+		for(int i=0; i<entityNodes.getLength(); i++){
+			Element listNode = (Element)entityNodes.item(i);
+			MjReference entityRef = new MjReference(listNode.getAttribute("id"));
+			this.types.put(entityRef.getId(), entityRef);
+		}
+	}
+	
+	private void instanciatePrimitivesTypes(ArrayList<MjType> javaPrimitives) {
+		for(MjType primitivType : javaPrimitives){
+			types.put(primitivType.getId(), primitivType);
+		}
+	}
+	
+
+	
 }

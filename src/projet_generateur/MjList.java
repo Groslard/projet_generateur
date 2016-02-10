@@ -7,13 +7,15 @@ public class MjList extends MjType {
 	// Maximum variables in the list (0 if no limits)
 	int max;
 
-	public MjList(MjType type) {
+	public MjList(String id, MjType type) {
 		super();
+		this.id = id;
 		this.type = type;
 	}
 
-	public MjList(MjType type, int min, int max) {
+	public MjList(String id, MjType type, int min, int max) {
 		super();
+		this.id = id;
 		this.type = type;
 		this.min = min;
 		this.max = max;
