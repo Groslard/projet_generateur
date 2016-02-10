@@ -51,6 +51,6 @@ public class MjList extends MjType {
 	}
 
 	public String getTypeName() {
-		return "Arraylist<" + type.getTypeName() + ">";
+		return "ArrayList<" + type.getTypeName() + ">";
 	}
 }
