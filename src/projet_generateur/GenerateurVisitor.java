@@ -80,18 +80,19 @@ public void exportclass(HashMap<String, String> lesclass){
 	public void visit(MjEntity o) {
 		// creation
 
-		header += "package " + pkg.name + "; \n";
-		header += "public class " + o.name + " { \n";
-		methodBloc += "public " + o.name + "(){} \n";
+		header += "package " + pkg.name + "; \n\n";
+		header += "public class " + o.name + " { \n\n";
+		methodBloc += "\tpublic " + o.name + "(){} \n\n";
 		for (MjAttribute attrib : o.attributes) {
 			attrib.accept(this);
 		}
+		declarationBloc+="\n";
 	}
 
 	@Override
 	public void visit(MjAttribute o) {
 		
-		declarationBloc += "private "+o.type.getTypeName()+" "+(o.name).toLowerCase() + "; \n";
+		declarationBloc += "\tprivate "+o.type.getTypeName()+" "+(o.name).toLowerCase() + "; \n";
 		methodBloc+=buildSetter(o);
 		methodBloc += buildGetter(o);
 	
@@ -99,7 +100,7 @@ public void exportclass(HashMap<String, String> lesclass){
 
 	private String buildSetter(MjAttribute o) {
 		String setter="";
-		setter+="public void set" + o.name.toLowerCase() + "("+o.type.getTypeName()+" "+o.name.toLowerCase()+"){\nthis." + o.name.toLowerCase()+"="+o.name.toLowerCase()+";\n }\n";
+		setter+="\tpublic void set" + o.name.substring(0,1).toUpperCase()+ o.name.substring(1) + "("+o.type.getTypeName()+" "+o.name.toLowerCase()+"){\n\t\tthis." + o.name.toLowerCase()+"="+o.name.toLowerCase()+";\n\t}\n\n";
 		
 		return setter;
 	}
@@ -109,7 +110,7 @@ public void exportclass(HashMap<String, String> lesclass){
 	
 	private String buildGetter(MjAttribute o) {
 		String getter="";
-		getter+="public "+o.type.getTypeName()+ " get" + o.name.toLowerCase() + "(){\nreturn " + o.name.toLowerCase()+";\n }\n";
+		getter+="\tpublic "+o.type.getTypeName()+ " get" + o.name.substring(0,1).toUpperCase()+ o.name.substring(1) + "(){\n\t\treturn " + o.name.toLowerCase()+";\n\t}\n\n";
 		return getter;
 	}
 
