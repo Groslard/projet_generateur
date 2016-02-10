@@ -9,7 +9,7 @@ public class MjReference extends MjType {
 
 	@Override
 	public String toString() {
-		return "MjType [entity=" + id + "]";
+		return "MjReference [entity=" + id + "]";
 	}
 	
 	public String getTypeName() {

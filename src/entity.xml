@@ -6,7 +6,6 @@
 	</types>
 	
 	<entity id="Balise">		
-		<attribute name="liste_a" type-id="list-list-String" />
 		<attribute name="monString" type-id="String" />
 		<attribute name="mesCoucou" type-id="list-list-Coucou"/>
 	</entity>

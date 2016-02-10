@@ -2,18 +2,10 @@ package GrosPaquet;
 
 public class Balise { 
 
-	private Arraylist<Arraylist<String>> liste_a; 
 	private String monstring; 
+	private Arraylist<Arraylist<Coucou>> mescoucou; 
 
 	public Balise(){} 
-
-	public void setListe_a(Arraylist<Arraylist<String>> liste_a){
-		this.liste_a=liste_a;
-	}
-
-	public Arraylist<Arraylist<String>> getListe_a(){
-		return liste_a;
-	}
 
 	public void setMonString(String monstring){
 		this.monstring=monstring;
@@ -21,6 +13,14 @@ public class Balise {
 
 	public String getMonString(){
 		return monstring;
+	}
+
+	public void setMesCoucou(Arraylist<Arraylist<Coucou>> mescoucou){
+		this.mescoucou=mescoucou;
+	}
+
+	public Arraylist<Arraylist<Coucou>> getMesCoucou(){
+		return mescoucou;
 	}
 
 

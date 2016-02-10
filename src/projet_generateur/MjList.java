@@ -47,7 +47,7 @@ public class MjList extends MjType {
 
 	@Override
 	public String toString() {
-		return "MjList [entity=" + type + ", min=" + min + ", max=" + max + "]";
+		return "MjList [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 
 	public String getTypeName() {
