@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package name="GrosPaquet">
 	<types>
+		<listdef id="list-String"  type-list="String"/>
 		<listdef id="list-Coucou"  type-list="Coucou"/>
 		<listdef id="list-list-Coucou" type-list="list-Coucou"/>
 	</types>
@@ -8,6 +9,8 @@
 	<entity id="Balise">		
 		<attribute name="monString" type-id="String" />
 		<attribute name="mesCoucou" type-id="list-list-Coucou"/>
+		<attribute name="noms"  type-id="list-String"/>
+		
 	</entity>
 	
 	<entity id="Coucou">

@@ -69,33 +69,67 @@ public class GenerateurVisitor implements InterfaceVisitor {
 
 	@Override
 	public void visit(MjAttribute o) {
-		declarationBloc += "\tprivate " + o.type.getTypeName() + " "
+		declarationBloc += "\tprivate " + getDeclaration(o.type) + " "
 				+ (o.name).toLowerCase() + "; \n";
-		methodBloc += buildSetter(o);
-		methodBloc += buildGetter(o);
+		methodBloc += getSetter(o);
+		methodBloc += getGetter(o);
 
 	}
 	
 	
 	/** GETTERS/SETTER BUILDER **/
-	private String buildSetter(MjAttribute o) {
+	private String getSetter(MjAttribute o) {
 		String setter = "";
 		setter += "\tpublic void set" + o.name.substring(0, 1).toUpperCase()
-				+ o.name.substring(1) + "(" + o.type.getTypeName() + " "
+				+ o.name.substring(1) + "(" + getDeclaration(o.type) + " "
 				+ o.name.toLowerCase() + "){\n\t\tthis." + o.name.toLowerCase()
 				+ "=" + o.name.toLowerCase() + ";\n\t}\n\n";
 
 		return setter;
 	}
 
-	private String buildGetter(MjAttribute o) {
+	private String getGetter(MjAttribute o) {
+		
 		String getter = "";
-		getter += "\tpublic " + o.type.getTypeName() + " get"
+		getter += "\tpublic " + getDeclaration(o.type) + " get"
 				+ o.name.substring(0, 1).toUpperCase() + o.name.substring(1)
 				+ "(){\n\t\treturn " + o.name.toLowerCase() + ";\n\t}\n\n";
 		return getter;
 	}
-
+	
+	private String getDeclaration(MjType type){
+		String result = "";
+		if (type instanceof MjList)
+			result = getDeclaration((MjList)type);
+		if (type instanceof MjReference)
+			result = getDeclaration((MjReference)type);
+		if (type instanceof MjPrimitif)
+			result = getDeclaration((MjPrimitif)type);
+		return result;
+	}
+	
+	private String getDeclaration(MjList list){
+		return "Arraylist<" + getDeclaration(list.type) + ">";
+	}
+	
+	private String getDeclaration(MjReference ref){
+		return ref.id;
+	}
+	
+	private String getDeclaration(MjPrimitif prim){
+		return prim.id;
+	}
+	
+	private String getImport(MjType type){
+		if(type.getImportPathFromLangage("Java") != null)
+			return "import "+type.getImportPathFromLangage("Java")+";";
+		return "";
+	}
+	
+	private String getInitialisation(MjAttribute attribut){
+		return attribut.name + " = " + attribut.type.getDefaultValue();
+	}
+	
 	
 	/** GENERATION METHOD **/
 	public void generate() {

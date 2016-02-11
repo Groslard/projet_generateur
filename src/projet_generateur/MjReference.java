@@ -1,18 +1,26 @@
 package projet_generateur;
 
 public class MjReference extends MjType {
+	MjEntity entity;
 	
-	public MjReference(String id) {
+	public MjReference(MjEntity entity) {
 		super();
-		this.id = id;
+		this.entity = entity;
 	}
-
+	
+	public MjReference(MjEntity entity, String defaultValue) {
+		super();
+		this.entity = entity;
+		this.defaultValue = defaultValue;
+	}
+	
 	@Override
 	public String toString() {
-		return "MjReference [entity=" + id + "]";
+		return "MjReference [entity=" + getId() + "]";
 	}
 	
-	public String getTypeName() {
-		return id;
+	@Override
+	public String getId(){
+		return entity.name;
 	}
 }
