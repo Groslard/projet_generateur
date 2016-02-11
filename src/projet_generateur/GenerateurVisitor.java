@@ -113,11 +113,11 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	}
 	
 	private String getDeclaration(MjReference ref){
-		return ref.id;
+		return ref.getId();
 	}
 	
 	private String getDeclaration(MjPrimitif prim){
-		return prim.id;
+		return prim.getId();
 	}
 	
 	private String getImport(MjType type){

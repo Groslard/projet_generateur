@@ -1,11 +1,10 @@
-package GrosPaquet;
-
-import java.util.ArrayList;
+package GrosPaquet; 
 
 public class Balise { 
 
 	private String monstring; 
-	private ArrayList<ArrayList<Coucou>> mescoucou; 
+	private Arraylist<Arraylist<Coucou>> mescoucou; 
+	private Arraylist<String> noms; 
 
 	public Balise(){} 
 
@@ -17,12 +16,20 @@ public class Balise {
 		return monstring;
 	}
 
-	public void setMesCoucou(ArrayList<ArrayList<Coucou>> mescoucou){
+	public void setMesCoucou(Arraylist<Arraylist<Coucou>> mescoucou){
 		this.mescoucou=mescoucou;
 	}
 
-	public ArrayList<ArrayList<Coucou>> getMesCoucou(){
+	public Arraylist<Arraylist<Coucou>> getMesCoucou(){
 		return mescoucou;
+	}
+
+	public void setNoms(Arraylist<String> noms){
+		this.noms=noms;
+	}
+
+	public Arraylist<String> getNoms(){
+		return noms;
 	}
 
 
