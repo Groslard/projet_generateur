@@ -38,7 +38,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	public void visit(MjPackage o) {
 
 		// creation du package sous forme de dossier
-		File dir = new File(o.name);
+		File dir = new File("src/"+o.name);
 		dir.mkdir();
 		// parcours des entities du package
 		for (MjEntity entitie : o.entities) {
@@ -144,7 +144,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 			Writer writer = null;
 
 			try {
-				File file = new File(pkg.name + "/" + cle + ".java");
+				File file = new File("src/"+pkg.name + "/" + cle + ".java");
 				writer = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(file), "utf-8"));
 				writer.write(valeur);
