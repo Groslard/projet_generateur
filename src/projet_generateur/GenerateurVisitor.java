@@ -59,8 +59,16 @@ public class GenerateurVisitor implements InterfaceVisitor {
 		// creation
 
 		header += "package " + pkg.name + "; \n\n";
-		header += "public class " + o.name + " { \n\n";
-		methodBloc += "\tpublic " + o.name + "(){} \n\n";
+		if(o.getParents()!=null){
+			header += "public class " + o.name + " extends  "+o.getParents().getName() +" { \n\n";
+			methodBloc += "\tpublic " + o.name + "(){\n\t super();\n\t} \n\n";
+		}else{
+			header += "public class " + o.name + " { \n\n";
+			methodBloc += "\tpublic " + o.name + "(){} \n\n";
+		}
+		
+	
+		
 		for (MjAttribute attrib : o.attributes) {
 			attrib.accept(this);
 		}

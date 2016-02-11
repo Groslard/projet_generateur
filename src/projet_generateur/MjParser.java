@@ -24,11 +24,10 @@ public class MjParser {
 	/** CONSTRUCTOR **/
 	public MjParser(String xmlPath) {
 		super();
-		
+
 		types = new HashMap<String, MjType>();
-		
-		final DocumentBuilderFactory factory = DocumentBuilderFactory
-				.newInstance();
+
+		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		document = null;
 		try {
@@ -49,33 +48,33 @@ public class MjParser {
 	}
 
 	/** JAVA PRIMITIVES **/
-	public static ArrayList<MjType> getJavaPrimitives(){
+	public static ArrayList<MjType> getJavaPrimitives() {
 		// au lieu de creer des entity, faire des reftype avec les primitives
 		ArrayList<MjType> primitives = new ArrayList<MjType>();
 		primitives.add(new MjReference("String"));
 		primitives.add(new MjReference("int"));
 		return primitives;
 	}
-	
+
 	/** EXPORT **/
 	public MjPackage getMetaInstance() {
 		MjPackage pkg = readPackageNode(document.getDocumentElement());
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
-		
+
 		return pkg;
 	}
 
 	/** READER METHODS **/
 	public MjPackage readPackageNode(Element packageNode) {
+
 		MjPackage pkg = new MjPackage(packageNode.getAttribute("name"));
-		
+
 		// Initialisation des types
 		instanciatePrimitivesTypes(getJavaPrimitives());
 		instantiateEntityTypes(packageNode.getElementsByTagName("entity"));
 		instantiateRefTypes(packageNode.getElementsByTagName("refdef"));
 		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
-		
-		
+
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -87,7 +86,16 @@ public class MjParser {
 	}
 
 	public MjEntity readEntityNode(Element entityNode) {
-		MjEntity entity = new MjEntity(entityNode.getAttribute("id"));
+		// recuperation du parents s'il existe
+		String nomParent = entityNode.getAttribute("parent");
+		MjEntity entity;
+		System.out.println("Nom du parent pour "+entityNode.getAttribute("id")+" : "+nomParent);
+		if (!nomParent.isEmpty() && nomParent != null) {
+			MjEntity parentsEntity = new MjEntity(nomParent);
+			entity = new MjEntity(entityNode.getAttribute("id"), parentsEntity);
+		} else {
+			entity = new MjEntity(entityNode.getAttribute("id"));
+		}
 
 		NodeList nl = entityNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -101,55 +109,48 @@ public class MjParser {
 		return entity;
 	}
 
-	public MjAttribute readAttributeNode(Element attributeNode){
+	public MjAttribute readAttributeNode(Element attributeNode) {
 		MjAttribute attribute = new MjAttribute(attributeNode.getAttribute("name"));
-		
-        String typeName = attributeNode.getAttribute("type-id");
-        
-        if(typeName == null)
-        	return null;
+
+		String typeName = attributeNode.getAttribute("type-id");
+
+		if (typeName == null)
+			return null;
 		attribute.setType(this.types.get(typeName));
-        return attribute;
+		return attribute;
 	}
-	
-	
+
 	/** TYPES INSTANTIATION **/
 	private void instanciatePrimitivesTypes(ArrayList<MjType> javaPrimitives) {
-		for(MjType primitivType : javaPrimitives){
+		for (MjType primitivType : javaPrimitives) {
 			types.put(primitivType.getId(), primitivType);
 		}
 	}
-	
-	public void instantiateEntityTypes(NodeList entityNodes){
-		for(int i=0; i<entityNodes.getLength(); i++){
-			Element listNode = (Element)entityNodes.item(i);
+
+	public void instantiateEntityTypes(NodeList entityNodes) {
+		for (int i = 0; i < entityNodes.getLength(); i++) {
+			Element listNode = (Element) entityNodes.item(i);
 			MjReference entityRef = new MjReference(listNode.getAttribute("id"));
 			this.types.put(entityRef.getId(), entityRef);
 		}
 	}
-	
-	public void instantiateRefTypes(NodeList typeNodes){
-		for(int i=0; i<typeNodes.getLength(); i++){
-			// regarder ici si c est deja present dans les primitives 
-			Element refNode = (Element)typeNodes.item(i);
+
+	public void instantiateRefTypes(NodeList typeNodes) {
+		for (int i = 0; i < typeNodes.getLength(); i++) {
+			// regarder ici si c est deja present dans les primitives
+			Element refNode = (Element) typeNodes.item(i);
 			MjReference ref = new MjReference(refNode.getAttribute("id"));
 			this.types.put(ref.getId(), ref);
 		}
 	}
-	
-	public void instantiateListTypes(NodeList listNodes){
-		for(int i=0; i<listNodes.getLength(); i++){
-			Element listNode = (Element)listNodes.item(i);
+
+	public void instantiateListTypes(NodeList listNodes) {
+		for (int i = 0; i < listNodes.getLength(); i++) {
+			Element listNode = (Element) listNodes.item(i);
 			MjType type = this.types.get(listNode.getAttribute("type-list"));
 			MjList list = new MjList(listNode.getAttribute("id"), type);
 			this.types.put(list.getId(), list);
 		}
 	}
-	
 
-	
-
-	
-
-	
 }

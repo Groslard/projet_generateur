@@ -1,13 +1,13 @@
-package GrosPaquet;
+package GrosPaquet; 
 
-import java.util.ArrayList;
-
-public class Balise { 
+public class Balise extends  test { 
 
 	private String monstring; 
 	private ArrayList<ArrayList<Coucou>> mescoucou; 
 
-	public Balise(){} 
+	public Balise(){
+	 super();
+	} 
 
 	public void setMonString(String monstring){
 		this.monstring=monstring;

@@ -5,12 +5,12 @@
 		<listdef id="list-list-Coucou" type-list="list-Coucou"/>
 	</types>
 	
-	<entity id="Balise">		
+	<entity id="Balise" parent="test">		
 		<attribute name="monString" type-id="String" />
 		<attribute name="mesCoucou" type-id="list-list-Coucou"/>
 	</entity>
 	
-	<entity id="Coucou">
+	<entity id="Coucou" >
 		<attribute name="Nom" type-id="String"/>
 		<attribute name="Numero" type-id="int"/>
 	</entity>
