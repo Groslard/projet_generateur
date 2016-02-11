@@ -49,8 +49,4 @@ public class MjList extends MjType {
 	public String toString() {
 		return "MjList [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
-
-	public String getTypeName() {
-		return "ArrayList<" + type.getTypeName() + ">";
-	}
 }
