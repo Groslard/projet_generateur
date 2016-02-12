@@ -3,7 +3,7 @@ package projet_generateur;
 
 public abstract class MjType {
 	protected String id;
-	protected String importPath="";
+	protected String importPath=null;
 	protected String defaultValue = null;
 	
 	public String getId() {
