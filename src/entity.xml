@@ -6,7 +6,7 @@
 		<listdef id="list-list-Coucou" type-list="list-Coucou"/>
 	</types>
 	
-	<entity id="Balise" parent="test">		
+	<entity id="Balise" parent="list-list-Coucou">		
 		<attribute name="monString" type-id="String" />
 		<attribute name="mesCoucou" type-id="list-list-Coucou"/>
 		<attribute name="noms"  type-id="list-String"/>

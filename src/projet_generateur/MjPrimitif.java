@@ -17,4 +17,8 @@ public class MjPrimitif extends MjType {
 	public String toString() {
 		return "MjPrimitif [id=" + id + "]";
 	}
+	
+	 public void accept(GenerateurVisitor visitor){
+		 visitor.visit(this);
+	 }
 }

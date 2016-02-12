@@ -49,4 +49,8 @@ public class MjList extends MjType {
 	public String toString() {
 		return "MjList [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
+	
+	 public void accept(GenerateurVisitor visitor){
+		 visitor.visit(this);
+	 }
 }

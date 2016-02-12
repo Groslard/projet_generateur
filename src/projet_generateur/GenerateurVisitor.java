@@ -13,16 +13,19 @@ import java.util.logging.Logger;
 
 public class GenerateurVisitor implements InterfaceVisitor {
 	/** Different part of export file **/
+	String importBlock;
 	String header;
 	String declarationBloc;
 	String methodBloc;
 	String footer;
-
-	/** current editing part **/
-	String editingBlock;
+	
+	String lastVisitedTypeName;
 
 	/** List of already generated class with source code **/
 	HashMap<String, String> listeclass = new HashMap<>();
+	
+	/** List of imports needed for current building class **/
+	HashMap<String, String> entityImports;
 	
 	/** Package to generate **/
 	MjPackage pkg;
@@ -42,46 +45,73 @@ public class GenerateurVisitor implements InterfaceVisitor {
 		dir.mkdir();
 		// parcours des entities du package
 		for (MjEntity entitie : o.entities) {
+			importBlock = "";
 			header = "";
 			footer = "\n }";
 			declarationBloc = "";
 			methodBloc = "";
+			entityImports = new HashMap<>();
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
-			listeclass.put(entitie.name, header + declarationBloc + methodBloc
+			listeclass.put(entitie.name, importBlock+header + declarationBloc + methodBloc
 					+ footer);
 		}
 	}
 
 	@Override
 	public void visit(MjEntity o) {
-		// creation
-
-		header += "package " + pkg.name + "; \n\n";
-		if(o.getParents()!=null){
-			header += "public class " + o.name + " extends  "+o.getParents().getName() +" { \n\n";
+		importBlock += "package " + pkg.name + "; \n\n";
+		if(o.getParent()!=null){
+			this.lastVisitedTypeName = "";
+			o.getParent().accept(this);
+			header += "public class " + o.name + " extends "+ this.lastVisitedTypeName +" { \n\n";
 			methodBloc += "\tpublic " + o.name + "(){\n\t super();\n\t} \n\n";
 		}else{
 			header += "public class " + o.name + " { \n\n";
 			methodBloc += "\tpublic " + o.name + "(){} \n\n";
 		}
 		
-	
-		
 		for (MjAttribute attrib : o.attributes) {
 			attrib.accept(this);
 		}
 		declarationBloc += "\n";
+		
+		for(String path : entityImports.values())
+			importBlock += "import "+ path+";\n";
 	}
 
 	@Override
 	public void visit(MjAttribute o) {
-		declarationBloc += "\tprivate " + getDeclaration(o.type) + " "
+		this.lastVisitedTypeName = "";
+		
+		o.type.accept(this);
+		
+		// faire un o.type.accept(self) et des visit pour mjtype en stockant la decla
+		declarationBloc += "\tprivate " + lastVisitedTypeName + " "
 				+ (o.name).toLowerCase() + "; \n";
 		methodBloc += getSetter(o);
 		methodBloc += getGetter(o);
 
+	}
+	
+	@Override
+	public void visit(MjList list){
+		lastVisitedTypeName += "ArrayList<";
+		list.type.accept(this);
+		lastVisitedTypeName += ">";
+	}
+	
+	@Override
+	public void visit(MjReference ref){
+		entityImports.put(ref.getId(), ref.getImportPath());
+		lastVisitedTypeName += ref.getId();
+	}
+	
+	@Override
+	public void visit(MjPrimitif prim){
+		entityImports.put(prim.getId(), prim.getImportPath());
+		lastVisitedTypeName += prim.getId();
 	}
 	
 	
@@ -89,49 +119,18 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	private String getSetter(MjAttribute o) {
 		String setter = "";
 		setter += "\tpublic void set" + o.name.substring(0, 1).toUpperCase()
-				+ o.name.substring(1) + "(" + getDeclaration(o.type) + " "
+				+ o.name.substring(1) + "(" + lastVisitedTypeName + " "
 				+ o.name.toLowerCase() + "){\n\t\tthis." + o.name.toLowerCase()
 				+ "=" + o.name.toLowerCase() + ";\n\t}\n\n";
-
 		return setter;
 	}
 
 	private String getGetter(MjAttribute o) {
-		
 		String getter = "";
-		getter += "\tpublic " + getDeclaration(o.type) + " get"
+		getter += "\tpublic " + lastVisitedTypeName + " get"
 				+ o.name.substring(0, 1).toUpperCase() + o.name.substring(1)
 				+ "(){\n\t\treturn " + o.name.toLowerCase() + ";\n\t}\n\n";
 		return getter;
-	}
-	
-	private String getDeclaration(MjType type){
-		String result = "";
-		if (type instanceof MjList)
-			result = getDeclaration((MjList)type);
-		if (type instanceof MjReference)
-			result = getDeclaration((MjReference)type);
-		if (type instanceof MjPrimitif)
-			result = getDeclaration((MjPrimitif)type);
-		return result;
-	}
-	
-	private String getDeclaration(MjList list){
-		return "Arraylist<" + getDeclaration(list.type) + ">";
-	}
-	
-	private String getDeclaration(MjReference ref){
-		return ref.getId();
-	}
-	
-	private String getDeclaration(MjPrimitif prim){
-		return prim.getId();
-	}
-	
-	private String getImport(MjType type){
-		if(type.getImportPathFromLangage("Java") != null)
-			return "import "+type.getImportPathFromLangage("Java")+";";
-		return "";
 	}
 	
 	private String getInitialisation(MjAttribute attribut){

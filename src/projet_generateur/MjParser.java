@@ -89,15 +89,12 @@ public class MjParser {
 	}
 
 	public MjEntity readEntityNode(Element entityNode) {
+		MjEntity entity = entities.get(entityNode.getAttribute("id"));
+		
 		// recuperation du parents s'il existe
 		String nomParent = entityNode.getAttribute("parent");
-		MjEntity entity;
-		System.out.println("Nom du parent pour "+entityNode.getAttribute("id")+" : "+nomParent);
 		if (!nomParent.isEmpty() && nomParent != null) {
-			MjEntity parentsEntity = new MjEntity(nomParent);
-			entity = new MjEntity(entityNode.getAttribute("id"), parentsEntity);
-		} else {
-			entity = new MjEntity(entityNode.getAttribute("id"));
+			entity.setParent(types.get(nomParent));
 		}
 
 		NodeList nl = entityNode.getChildNodes();
@@ -154,6 +151,7 @@ public class MjParser {
 			Element listNode = (Element)listNodes.item(i);
 			MjType type = this.types.get(listNode.getAttribute("type-list"));
 			MjList list = new MjList(listNode.getAttribute("id"), type);
+			list.setImportPath("java.util.ArrayList");
 			this.types.put(list.getId(), list);
 		}
 	}

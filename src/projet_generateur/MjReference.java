@@ -23,4 +23,8 @@ public class MjReference extends MjType {
 	public String getId(){
 		return entity.name;
 	}
+	
+	 public void accept(GenerateurVisitor visitor){
+		 visitor.visit(this);
+	 }
 }
