@@ -18,7 +18,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	String declarationBloc;
 	String methodBloc;
 	String footer;
-	
+	String constructorBlock;
 	String lastVisitedTypeName;
 
 	/** List of already generated class with source code **/
@@ -50,11 +50,12 @@ public class GenerateurVisitor implements InterfaceVisitor {
 			footer = "\n }";
 			declarationBloc = "";
 			methodBloc = "";
+			constructorBlock="";
 			entityImports = new HashMap<>();
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
-			listeclass.put(entitie.name, importBlock+header + declarationBloc + methodBloc
+			listeclass.put(entitie.name, importBlock+header + declarationBloc+constructorBlock + methodBloc
 					+ footer);
 		}
 	}
@@ -66,15 +67,20 @@ public class GenerateurVisitor implements InterfaceVisitor {
 			this.lastVisitedTypeName = "";
 			o.getParent().accept(this);
 			header += "public class " + o.name + " extends "+ this.lastVisitedTypeName +" { \n\n";
-			methodBloc += "\tpublic " + o.name + "(){\n\t super();\n\t} \n\n";
+			constructorBlock += "\tpublic " + o.name + "(){\n\tsuper();\n";
+			
+			
 		}else{
 			header += "public class " + o.name + " { \n\n";
-			methodBloc += "\tpublic " + o.name + "(){} \n\n";
+			constructorBlock += "\tpublic " + o.name + "(){\n";
 		}
+		
 		
 		for (MjAttribute attrib : o.attributes) {
 			attrib.accept(this);
 		}
+		constructorBlock += "\t} \n\n";
+		
 		declarationBloc += "\n";
 		
 		for(String path : entityImports.values())
@@ -90,6 +96,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 		// faire un o.type.accept(self) et des visit pour mjtype en stockant la decla
 		declarationBloc += "\tprivate " + lastVisitedTypeName + " "
 				+ (o.name).toLowerCase() + "; \n";
+		constructorBlock+=getInitialisation(o);
 		methodBloc += getSetter(o);
 		methodBloc += getGetter(o);
 
@@ -134,7 +141,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	}
 	
 	private String getInitialisation(MjAttribute attribut){
-		return attribut.name + " = " + attribut.type.getDefaultValue();
+		return "\tthis."+attribut.name.toLowerCase() + " = " + attribut.type.getDefaultValue()+";\n";
 	}
 	
 	
