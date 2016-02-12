@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	HashMap<String, String> listeclass = new HashMap<>();
 	
 	/** List of imports needed for current building class **/
-	HashMap<String, String> entityImports;
+	HashSet<String> entityImports;
 	
 	/** Package to generate **/
 	MjPackage pkg;
@@ -50,7 +51,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 			footer = "\n }";
 			declarationBloc = "";
 			methodBloc = "";
-			entityImports = new HashMap<>();
+			entityImports = new HashSet<>();
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
@@ -77,8 +78,11 @@ public class GenerateurVisitor implements InterfaceVisitor {
 		}
 		declarationBloc += "\n";
 		
-		for(String path : entityImports.values())
+		entityImports.remove(null);
+		for(String path : entityImports)
 			importBlock += "import "+ path+";\n";
+		
+		importBlock += "\n";
 	}
 
 	@Override
@@ -97,6 +101,7 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	
 	@Override
 	public void visit(MjList list){
+		entityImports.add(list.getImportPath());
 		lastVisitedTypeName += "ArrayList<";
 		list.type.accept(this);
 		lastVisitedTypeName += ">";
@@ -104,13 +109,13 @@ public class GenerateurVisitor implements InterfaceVisitor {
 	
 	@Override
 	public void visit(MjReference ref){
-		entityImports.put(ref.getId(), ref.getImportPath());
+		entityImports.add(ref.getImportPath());
 		lastVisitedTypeName += ref.getId();
 	}
 	
 	@Override
 	public void visit(MjPrimitif prim){
-		entityImports.put(prim.getId(), prim.getImportPath());
+		entityImports.add(prim.getImportPath());
 		lastVisitedTypeName += prim.getId();
 	}
 	
