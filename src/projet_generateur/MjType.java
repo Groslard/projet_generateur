@@ -31,7 +31,7 @@ public abstract class MjType {
 		this.defaultValue = defaultValue;
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 return;
 	 }
 	

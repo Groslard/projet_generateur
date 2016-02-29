@@ -18,7 +18,7 @@ public class MjPrimitif extends MjType {
 		return "MjPrimitif [id=" + id + "]";
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
 }

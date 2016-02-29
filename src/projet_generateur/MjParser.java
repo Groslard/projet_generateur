@@ -151,7 +151,6 @@ public class MjParser {
 			Element listNode = (Element)listNodes.item(i);
 			MjType type = this.types.get(listNode.getAttribute("type-list"));
 			MjList list = new MjList(listNode.getAttribute("id"), type);
-			list.setImportPath("java.util.ArrayList");
 			this.types.put(list.getId(), list);
 		}
 	}

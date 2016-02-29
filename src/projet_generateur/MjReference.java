@@ -24,7 +24,7 @@ public class MjReference extends MjType {
 		return entity.name;
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
 }

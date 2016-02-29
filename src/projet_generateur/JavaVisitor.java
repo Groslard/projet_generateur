@@ -12,27 +12,11 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GenerateurVisitor implements InterfaceVisitor {
-	/** Different part of export file **/
-	String importBlock;
-	String header;
-	String declarationBloc;
-	String methodBloc;
-	String footer;
+public class JavaVisitor extends LangageVisitor {
 	
-	String lastVisitedTypeName;
-
-	/** List of already generated class with source code **/
-	HashMap<String, String> listeclass = new HashMap<>();
-	
-	/** List of imports needed for current building class **/
-	HashSet<String> entityImports;
-	
-	/** Package to generate **/
-	MjPackage pkg;
 
 	/** CONSTRUCTOR **/
-	public GenerateurVisitor(MjPackage pkg) {
+	public JavaVisitor(MjPackage pkg) {
 		super();
 		this.pkg = pkg;
 	}

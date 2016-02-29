@@ -37,7 +37,7 @@ public class MjPackage {
 		return res;
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
 }

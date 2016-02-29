@@ -50,7 +50,7 @@ public class MjList extends MjType {
 		return "MjList [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
 }

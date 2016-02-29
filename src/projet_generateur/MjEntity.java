@@ -29,7 +29,7 @@ public class MjEntity {
 		return "MjEntity [name=" + name + ", attributes=" + attributes + "]";
 	}
 	
-	 public void accept(GenerateurVisitor visitor){
+	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 		 
 	 }

@@ -6,7 +6,7 @@ public class testGeneration {
 		MjParser parser = new MjParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\entity.xml");
 		MjPackage pkg = parser.getMetaInstance();
 		
-		GenerateurVisitor visitgenerer= new GenerateurVisitor(pkg);
+		JavaVisitor visitgenerer= new JavaVisitor(pkg);
 		visitgenerer.generate();
 	}
 
