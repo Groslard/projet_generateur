@@ -3,8 +3,10 @@ package projet_generateur;
 
 public abstract class MjType {
 	protected String id;
-	protected String importPath=null;
 	protected String defaultValue = null;
+	
+	// Valeur mise a jour par le visiteur qui renseigne le nom réel à écrire lors de la génération
+	protected String generatedName;
 	
 	public String getId() {
 		return id;
@@ -12,15 +14,6 @@ public abstract class MjType {
 	
 	public void setId(String id) {
 		this.id = id;
-	}
-
-
-	public String getImportPath() {
-		return importPath;
-	}
-
-	public void setImportPath(String importPath) {
-		this.importPath = importPath;
 	}
 
 	public String getDefaultValue() {

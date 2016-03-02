@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package name="GrosPaquet">
+<root>
 	<collections>
 		<listdef id="list-String" min="10" max="20" type="String"/>
 		<listdef id="list-Coucou"  type="Coucou"/>
@@ -17,5 +17,6 @@
 	<entity id="Coucou" >
 		<attribute name="Nom" type="String"/>
 		<attribute name="Numero" type="int"/>
+		<attribute name="mesStrings" type="set-String"/>
 	</entity>
-</package>
+</root>

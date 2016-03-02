@@ -20,10 +20,10 @@ public abstract class LangageVisitor {
 	/** List of imports needed for current building class **/
 	HashSet<String> entityImports;
 	
-	/** Package to generate **/
-	MjPackage pkg;
+	/** Model to generate **/
+	MjModel mdl;
 	
-	public abstract void visit(MjPackage o);
+	public abstract void visit(MjModel o);
 	public abstract void visit(MjEntity o);
 	public abstract void visit(MjAttribute o);
 	public abstract void visit(MjList list);

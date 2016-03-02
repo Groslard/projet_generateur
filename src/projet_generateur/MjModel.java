@@ -2,11 +2,11 @@ package projet_generateur;
 
 import java.util.ArrayList;
 
-public class MjPackage {
+public class MjModel {
 	String name;
 	ArrayList<MjEntity> entities;
 	
-	public MjPackage(String name){
+	public MjModel(String name){
 		this.name = name;
 		entities = new ArrayList<MjEntity>();
 	}
