@@ -1,4 +1,4 @@
-package projet_generateur;
+package parser;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,14 +17,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class MjParserImports {
+public class ParamParser {
 
 	
 	Document document;
 	HashMap<String, MjParserImports> primitives;
 
 	/** CONSTRUCTOR **/
-	public MjParserImports(String xmlPath) {
+	public ParamParser(String xmlPath) {
 		super();
 
 		primitives = new HashMap<String, MjParserImports>();

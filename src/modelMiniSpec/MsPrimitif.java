@@ -1,13 +1,15 @@
-package projet_generateur;
+package modelMiniSpec;
 
-public class MjPrimitif extends MjType {
+import generator.JavaVisitor;
+
+public class MsPrimitif extends MsType {
 	
-	public MjPrimitif(String id) {
+	public MsPrimitif(String id) {
 		super();
 		this.id = id;
 	}
 	
-	public MjPrimitif(String id, String defaultValue) {
+	public MsPrimitif(String id, String defaultValue) {
 		super();
 		this.id = id;
 		this.defaultValue = defaultValue;

@@ -1,4 +1,4 @@
-package projet_generateur;
+package main;
 
 import GrosPaquet.Balise;
 import GrosPaquet.Coucou;

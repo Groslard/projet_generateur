@@ -1,19 +1,21 @@
-package projet_generateur;
+package modelMiniSpec;
 
-public class MjList extends MjType {
-	MjType type;
+import generator.JavaVisitor;
+
+public class MsList extends MsType {
+	MsType type;
 	// minimum variables in the list
 	int min;
 	// Maximum variables in the list (0 if no limits)
 	int max;
 
-	public MjList(String id, MjType type) {
+	public MsList(String id, MsType type) {
 		super();
 		this.id = id;
 		this.type = type;
 	}
 
-	public MjList(String id, MjType type, int min, int max) {
+	public MsList(String id, MsType type, int min, int max) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -21,11 +23,11 @@ public class MjList extends MjType {
 		this.max = max;
 	}
 
-	public MjType getType() {
+	public MsType getType() {
 		return type;
 	}
 
-	public void setType(MjType type) {
+	public void setType(MsType type) {
 		this.type = type;
 	}
 	

@@ -1,15 +1,17 @@
-package projet_generateur;
+package modelMiniSpec;
+
+import generator.JavaVisitor;
 
 import java.util.ArrayList;
 
-public class MjEntity {
+public class MsEntity {
 	String name;
-	ArrayList<MjAttribute> attributes;
-	MjType parent;
+	ArrayList<MsAttribute> attributes;
+	MsType parent;
 	
-	public MjEntity(String name){
+	public MsEntity(String name){
 		this.name = name;
-		attributes = new ArrayList<MjAttribute>(); 
+		attributes = new ArrayList<MsAttribute>(); 
 		this.parent=null;
 	}
 	
@@ -20,7 +22,7 @@ public class MjEntity {
 		this.name = name;
 	}
 	
-	public void addAttribute(MjAttribute attribute) {
+	public void addAttribute(MsAttribute attribute) {
 		attributes.add(attribute);
 	}
 	
@@ -34,19 +36,19 @@ public class MjEntity {
 		 
 	 }
 
-	public ArrayList<MjAttribute> getAttributes() {
+	public ArrayList<MsAttribute> getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(ArrayList<MjAttribute> attributes) {
+	public void setAttributes(ArrayList<MsAttribute> attributes) {
 		this.attributes = attributes;
 	}
 
-	public MjType getParent() {
+	public MsType getParent() {
 		return parent;
 	}
 
-	public void setParent(MjType parents) {
+	public void setParent(MsType parents) {
 		this.parent = parents;
 	}
 	 

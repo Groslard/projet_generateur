@@ -1,4 +1,4 @@
-package projet_generateur;
+package generator;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,24 +11,33 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import modelMiniSpec.MsAttribute;
+import modelMiniSpec.MsEntity;
+import modelMiniSpec.MsList;
+import modelMiniSpec.MsModel;
+import modelMiniSpec.MsPrimitif;
+import modelMiniSpec.MsReference;
+import modelParameter.PrmConfig;
+
 public class JavaVisitor extends LangageVisitor {
 	
 
 	/** CONSTRUCTOR **/
-	public JavaVisitor(MjModel mdl) {
+	public JavaVisitor(MsModel mdl, PrmConfig conf) {
 		super();
+		this.conf = conf;
 		this.mdl = mdl;
 	}
 
 	/** VISIT METHODS **/
 	@Override
-	public void visit(MjModel o) {
+	public void visit(MsModel o) {
 
 		// creation du package sous forme de dossier
 		File dir = new File("src/"+o.name);
 		dir.mkdir();
 		// parcours des entities du package
-		for (MjEntity entitie : o.entities) {
+		for (MsEntity entitie : o.entities) {
 			importBlock = "";
 			header = "";
 			footer = "\n }";
@@ -44,7 +53,7 @@ public class JavaVisitor extends LangageVisitor {
 	}
 
 	@Override
-	public void visit(MjEntity o) {
+	public void visit(MsEntity o) {
 		importBlock += "package " + mdl.name + "; \n\n";
 		if(o.getParent()!=null){
 			this.lastVisitedTypeName = "";
@@ -56,7 +65,7 @@ public class JavaVisitor extends LangageVisitor {
 			methodBloc += "\tpublic " + o.name + "(){} \n\n";
 		}
 		
-		for (MjAttribute attrib : o.attributes) {
+		for (MsAttribute attrib : o.attributes) {
 			attrib.accept(this);
 		}
 		declarationBloc += "\n";
@@ -69,7 +78,7 @@ public class JavaVisitor extends LangageVisitor {
 	}
 
 	@Override
-	public void visit(MjAttribute o) {
+	public void visit(MsAttribute o) {
 		this.lastVisitedTypeName = "";
 		
 		o.type.accept(this);
@@ -83,7 +92,7 @@ public class JavaVisitor extends LangageVisitor {
 	}
 	
 	@Override
-	public void visit(MjList list){
+	public void visit(MsList list){
 		entityImports.add(list.getImportPath());
 		lastVisitedTypeName += "ArrayList<";
 		list.type.accept(this);
@@ -91,20 +100,20 @@ public class JavaVisitor extends LangageVisitor {
 	}
 	
 	@Override
-	public void visit(MjReference ref){
+	public void visit(MsReference ref){
 		entityImports.add(ref.getImportPath());
 		lastVisitedTypeName += ref.getId();
 	}
 	
 	@Override
-	public void visit(MjPrimitif prim){
+	public void visit(MsPrimitif prim){
 		entityImports.add(prim.getImportPath());
 		lastVisitedTypeName += prim.getId();
 	}
 	
 	
 	/** GETTERS/SETTER BUILDER **/
-	private String getSetter(MjAttribute o) {
+	private String getSetter(MsAttribute o) {
 		String setter = "";
 		setter += "\tpublic void set" + o.name.substring(0, 1).toUpperCase()
 				+ o.name.substring(1) + "(" + lastVisitedTypeName + " "
@@ -113,7 +122,7 @@ public class JavaVisitor extends LangageVisitor {
 		return setter;
 	}
 
-	private String getGetter(MjAttribute o) {
+	private String getGetter(MsAttribute o) {
 		String getter = "";
 		getter += "\tpublic " + lastVisitedTypeName + " get"
 				+ o.name.substring(0, 1).toUpperCase() + o.name.substring(1)
@@ -121,7 +130,7 @@ public class JavaVisitor extends LangageVisitor {
 		return getter;
 	}
 	
-	private String getInitialisation(MjAttribute attribut){
+	private String getInitialisation(MsAttribute attribut){
 		return attribut.name + " = " + attribut.type.getDefaultValue();
 	}
 	

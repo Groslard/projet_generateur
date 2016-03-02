@@ -1,10 +1,12 @@
-package projet_generateur;
+package modelMiniSpec;
 
-public class MjAttribute {
+import generator.JavaVisitor;
+
+public class MsAttribute {
 	String name;
-	MjType type;
+	MsType type;
 	
-	public MjAttribute(String name){
+	public MsAttribute(String name){
 		this.name = name;
 	}
 
@@ -16,11 +18,11 @@ public class MjAttribute {
 		this.name = name;
 	}
 
-	public MjType getType() {
+	public MsType getType() {
 		return type;
 	}
 
-	public void setType(MjType type) {
+	public void setType(MsType type) {
 		this.type = type;
 	}
 	

@@ -1,14 +1,16 @@
-package projet_generateur;
+package modelMiniSpec;
+
+import generator.JavaVisitor;
 
 import java.util.ArrayList;
 
-public class MjModel {
+public class MsModel {
 	String name;
-	ArrayList<MjEntity> entities;
+	ArrayList<MsEntity> entities;
 	
-	public MjModel(String name){
+	public MsModel(String name){
 		this.name = name;
-		entities = new ArrayList<MjEntity>();
+		entities = new ArrayList<MsEntity>();
 	}
 	
 	public String getName() {
@@ -17,12 +19,12 @@ public class MjModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void addEntity(MjEntity entity) {
+	public void addEntity(MsEntity entity) {
 		entities.add(entity);
 	}
 	
-	public MjEntity getEntity(String name){
-		for(MjEntity entity:entities){
+	public MsEntity getEntity(String name){
+		for(MsEntity entity:entities){
 			if(entity.name.equals(name))
 				return entity;
 		}
@@ -32,7 +34,7 @@ public class MjModel {
 	@Override
 	public String toString() {
 		String res = "MjPackage [name=" + name + ", \nentities=";
-		for(MjEntity entity : entities)
+		for(MsEntity entity : entities)
 			res+="\n"+entity;
 		return res;
 	}

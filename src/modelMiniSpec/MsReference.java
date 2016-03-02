@@ -1,14 +1,16 @@
-package projet_generateur;
+package modelMiniSpec;
 
-public class MjReference extends MjType {
-	MjEntity entity;
+import generator.JavaVisitor;
+
+public class MsReference extends MsType {
+	MsEntity entity;
 	
-	public MjReference(MjEntity entity) {
+	public MsReference(MsEntity entity) {
 		super();
 		this.entity = entity;
 	}
 	
-	public MjReference(MjEntity entity, String defaultValue) {
+	public MsReference(MsEntity entity, String defaultValue) {
 		super();
 		this.entity = entity;
 		this.defaultValue = defaultValue;
