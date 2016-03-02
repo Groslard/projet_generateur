@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package name="GrosPaquet">
-	<types>
-		<listdef id="list-String"  type-list="String"/>
-		<listdef id="list-Coucou"  type-list="Coucou"/>
-		<listdef id="list-list-Coucou" type-list="list-Coucou"/>
-	</types>
+	<collections>
+		<listdef id="list-String" min="10" max="20" type="String"/>
+		<listdef id="list-Coucou"  type="Coucou"/>
+		<listdef id="list-list-Coucou" type="list-Coucou"/>
+		<setdef id="set-String" type="String"/>
+	</collections>
 	
 	<entity id="Balise" parent="list-list-Coucou">		
-		<attribute name="monString" type-id="String" />
-		<attribute name="mesCoucou" type-id="list-list-Coucou"/>
-		<attribute name="noms"  type-id="list-String"/>
+		<attribute name="monString" type="String" />
+		<attribute name="mesCoucou" type="list-list-Coucou"/>
+		<attribute name="noms"  type="list-String"/>
 		
 	</entity>
 	
 	<entity id="Coucou" >
-		<attribute name="Nom" type-id="String"/>
-		<attribute name="Numero" type-id="int"/>
+		<attribute name="Nom" type="String"/>
+		<attribute name="Numero" type="int"/>
 	</entity>
 </package>

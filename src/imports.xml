@@ -1,0 +1,8 @@
+<java-code>
+	<model name="Balise" package="GrosPaquet"/>
+	<model name="Coucou" package="GrosPaquet"/>
+	<primitive name="String" type="String"/>
+	<primitive name="int" type="Integer"/>
+	<primitive name="list" type="ArrayList" package="Java.util.ArrayList"/>
+	<primitive name="set" type="HashSet" package="Java.util.HashSet" />
+</java-code>

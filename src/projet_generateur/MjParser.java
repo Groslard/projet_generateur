@@ -151,6 +151,11 @@ public class MjParser {
 			Element listNode = (Element)listNodes.item(i);
 			MjType type = this.types.get(listNode.getAttribute("type-list"));
 			MjList list = new MjList(listNode.getAttribute("id"), type);
+			String min = listNode.getAttribute("min");
+			String max = listNode.getAttribute("max");
+			list.min = min==""?0:Integer.parseInt(min);
+			list.max = min==""?0:Integer.parseInt(max);
+			
 			this.types.put(list.getId(), list);
 		}
 	}
