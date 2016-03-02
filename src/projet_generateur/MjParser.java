@@ -60,17 +60,17 @@ public class MjParser {
 	}
 
 	/** EXPORT **/
-	public MjPackage getMetaInstance() {
-		MjPackage pkg = readPackageNode(document.getDocumentElement());
+	public MjModel getMetaInstance() {
+		MjModel mdl = readPackageNode(document.getDocumentElement());
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
 
-		return pkg;
+		return mdl;
 	}
 
 	/** READER METHODS **/
-	public MjPackage readPackageNode(Element packageNode) {
+	public MjModel readPackageNode(Element packageNode) {
 
-		MjPackage pkg = new MjPackage(packageNode.getAttribute("name"));
+		MjModel mdl = new MjModel(packageNode.getAttribute("name"));
 
 		// Initialisation des types
 		instanciatePrimitivesTypes(getJavaPrimitives());
@@ -82,10 +82,10 @@ public class MjParser {
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
 			if (childNode.getNodeName() == "entity") {
-				pkg.addEntity(readEntityNode((Element) childNode));
+				mdl.addEntity(readEntityNode((Element) childNode));
 			}
 		}
-		return pkg;
+		return mdl;
 	}
 
 	public MjEntity readEntityNode(Element entityNode) {

@@ -15,14 +15,14 @@ public class JavaVisitor extends LangageVisitor {
 	
 
 	/** CONSTRUCTOR **/
-	public JavaVisitor(MjPackage pkg) {
+	public JavaVisitor(MjModel mdl) {
 		super();
-		this.pkg = pkg;
+		this.mdl = mdl;
 	}
 
 	/** VISIT METHODS **/
 	@Override
-	public void visit(MjPackage o) {
+	public void visit(MjModel o) {
 
 		// creation du package sous forme de dossier
 		File dir = new File("src/"+o.name);
@@ -45,7 +45,7 @@ public class JavaVisitor extends LangageVisitor {
 
 	@Override
 	public void visit(MjEntity o) {
-		importBlock += "package " + pkg.name + "; \n\n";
+		importBlock += "package " + mdl.name + "; \n\n";
 		if(o.getParent()!=null){
 			this.lastVisitedTypeName = "";
 			o.getParent().accept(this);
@@ -129,7 +129,7 @@ public class JavaVisitor extends LangageVisitor {
 	/** GENERATION METHOD **/
 	public void generate() {
 		/** Build source code **/
-		this.pkg.accept(this);
+		this.mdl.accept(this);
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Source Code Built");
 		
 		/** Files building **/
@@ -139,7 +139,7 @@ public class JavaVisitor extends LangageVisitor {
 			Writer writer = null;
 
 			try {
-				File file = new File("src/"+pkg.name + "/" + cle + ".java");
+				File file = new File("src/"+mdl.name + "/" + cle + ".java");
 				writer = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(file), "utf-8"));
 				writer.write(valeur);
