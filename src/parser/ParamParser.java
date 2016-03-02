@@ -17,17 +17,24 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import modelMiniSpec.MsAttribute;
+import modelMiniSpec.MsEntity;
+import modelParameter.PrmConfig;
+import modelParameter.PrmModel;
+import modelParameter.PrmParameter;
+import modelParameter.PrmPrimitif;
+
 public class ParamParser {
 
 	
 	Document document;
-	HashMap<String, MjParserImports> primitives;
+	HashMap<String, PrmParameter> params;
 
 	/** CONSTRUCTOR **/
 	public ParamParser(String xmlPath) {
 		super();
 
-		primitives = new HashMap<String, MjParserImports>();
+		params = new HashMap<String, PrmParameter>();
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 
@@ -42,33 +49,70 @@ public class ParamParser {
 	}
 	
 	/** EXPORT **/
-	public ArrayList<MjParserImports> getMetaInstance() {
-		ArrayList<MjParserImports> pkg = readPackageNode(document.getDocumentElement());
+	public PrmConfig getMetaInstance() {
+		PrmConfig prmConfig = readPackageNode(document.getDocumentElement());
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
 
-		return pkg;
+		return prmConfig;
 	}
 
 	/** READER METHODS **/
-	public ArrayList<MjParserImports> readPackageNode(Element packageNode) {
+	public PrmConfig readPackageNode(Element packageNode) {
 
-		ArrayList<MjParserImports> pkg = ;
-
-		// Initialisation des types
-		instanciatePrimitivesTypes(getJavaPrimitives());
-		instantiateRefTypes(packageNode.getElementsByTagName("refdef"));
-		instantiateEntityTypes(packageNode.getElementsByTagName("entity"));
-		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
-
+		PrmConfig prmConfig= new PrmConfig();
+		prmConfig.setLanguageType(packageNode.getTagName());
+		
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
-			if (childNode.getNodeName() == "entity") {
-				pkg.addEntity(readEntityNode((Element) childNode));
+			if (childNode.getNodeName() == "model") {
+				prmConfig.addparameters(readModelNode((Element) childNode));
+			}
+			if (childNode.getNodeName() == "primitive") {
+				prmConfig.addparameters(readPrimitifNode((Element) childNode));
 			}
 		}
-		return pkg;
+		return prmConfig;
 	}
 	
 	
+	public PrmModel readModelNode(Element entityNode) {
+		PrmModel model= new PrmModel();
+		
+		// recuperation du parents s'il existe
+		String nomModel = entityNode.getAttribute("name");
+		if (!nomModel.isEmpty() && nomModel != null) {
+			model.setName(nomModel);
+		}
+		String nomPackage = entityNode.getAttribute("package");
+		if (!nomPackage.isEmpty() && nomPackage != null) {
+			model.setPkg(nomPackage);
+		}else{
+			model.setPkg(null);
+		}
+		
+		
+		return model;
+	}
+	
+	public PrmPrimitif readPrimitifNode(Element entityNode) {
+		PrmPrimitif primitif=new PrmPrimitif();
+		
+		String nomPrimitif = entityNode.getAttribute("name");
+		if (!nomPrimitif.isEmpty() && nomPrimitif != null) {
+			primitif.setName(nomPrimitif);
+		}
+		String nomPackage = entityNode.getAttribute("package");
+		if (!nomPackage.isEmpty() && nomPackage != null) {
+			primitif.setPkg(nomPackage);
+		}else{
+			primitif.setPkg(null);
+		}
+		String type = entityNode.getAttribute("type");
+		if (!nomPackage.isEmpty() && nomPackage != null) {
+			primitif.setType(type);
+		}
+		
+		return primitif;
+	}
 }
