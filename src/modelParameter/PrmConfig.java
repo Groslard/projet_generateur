@@ -39,5 +39,12 @@ public class PrmConfig {
 		this.languageType = languageType;
 	}
 	
+	public ArrayList<String>  getentities(){
+		ArrayList<String>  listenoms=new ArrayList<>();
+		for (PrmParameter param :parameters){
+			listenoms.add(param.getName());
+		}
+		return listenoms;
+	}
 	
 }
