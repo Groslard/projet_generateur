@@ -1,34 +1,23 @@
 package modelParameter;
 
 import java.util.ArrayList;
-
-import modelMiniSpec.MsEntity;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 public class PrmConfig {
 
-	ArrayList<PrmParameter> parameters;
 	String languageType;
-	
+
+	HashMap<String, PrmParameter> params;
+
 	public PrmConfig() {
 		super();
-		parameters = new ArrayList<PrmParameter>();
+		params = new HashMap<String, PrmParameter>();
 	}
 
-	
-	
-	
 	public void addparameters(PrmParameter paremetre) {
-		parameters.add(paremetre);
-	}
-	
-	
-	
-	public ArrayList<PrmParameter> getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(ArrayList<PrmParameter> parameters) {
-		this.parameters = parameters;
+		params.put(paremetre.getName(), paremetre);
 	}
 
 	public String getLanguageType() {
@@ -38,13 +27,30 @@ public class PrmConfig {
 	public void setLanguageType(String languageType) {
 		this.languageType = languageType;
 	}
-	
-	public ArrayList<String>  getentities(){
-		ArrayList<String>  listenoms=new ArrayList<>();
-		for (PrmParameter param :parameters){
-			listenoms.add(param.getName());
-		}
-		return listenoms;
+
+	public PrmParameter getParameter(String clefRecherche) {
+
+		return params.get(clefRecherche);
 	}
-	
+
+	public ArrayList<String> getListeParameter() {
+		ArrayList<String>listeStringParam= new ArrayList<>();
+
+		Set<String> cles = params.keySet();
+		Iterator<String> it = cles.iterator();
+		while (it.hasNext()){
+			listeStringParam.add(it.next());
+		}
+		
+		return listeStringParam;
+	}
+
+	public HashMap<String, PrmParameter> getParams() {
+		return params;
+	}
+
+	public void setParams(HashMap<String, PrmParameter> params) {
+		this.params = params;
+	}
+
 }

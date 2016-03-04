@@ -2,7 +2,6 @@ package parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,8 +16,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import modelMiniSpec.MsAttribute;
-import modelMiniSpec.MsEntity;
 import modelParameter.PrmConfig;
 import modelParameter.PrmModel;
 import modelParameter.PrmParameter;
