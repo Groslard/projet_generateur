@@ -13,7 +13,6 @@ import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
-import modelMiniSpec.MsPrimitif;
 import modelMiniSpec.MsReference;
 import modelMiniSpec.MsType;
 
@@ -27,14 +26,12 @@ import java.util.logging.*;
 
 public class MiniSpecParser {
 	Document document;
-	HashMap<String, MsType> types;
 	HashMap<String, MsEntity> entities;
 
 	/** CONSTRUCTOR **/
 	public MiniSpecParser(String xmlPath) {
 		super();
 
-		types = new HashMap<String, MsType>();
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		entities = new HashMap<String, MsEntity>();
@@ -58,15 +55,6 @@ public class MiniSpecParser {
 		this.document = document;
 	}
 
-	/** JAVA PRIMITIVES **/
-	public static ArrayList<MsType> getJavaPrimitives() {
-		// au lieu de creer des entity, faire des reftype avec les primitives
-		ArrayList<MsType> primitives = new ArrayList<MsType>();
-		primitives.add(new MsPrimitif("String", "\"\""));
-		primitives.add(new MsPrimitif("int", "0"));
-		return primitives;
-	}
-
 	/** EXPORT **/
 	public MsModel getMetaInstance() {
 		MsModel mdl = readPackageNode(document.getDocumentElement());
@@ -81,8 +69,6 @@ public class MiniSpecParser {
 		MsModel mdl = new MsModel(packageNode.getAttribute("name"));
 
 		// Initialisation des types
-		instanciatePrimitivesTypes(getJavaPrimitives());
-		instantiateRefTypes(packageNode.getElementsByTagName("refdef"));
 		instantiateEntityTypes(packageNode.getElementsByTagName("entity"));
 		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
 
@@ -128,29 +114,12 @@ public class MiniSpecParser {
 		return attribute;
 	}
 
-	/** TYPES INSTANTIATION **/
-	private void instanciatePrimitivesTypes(ArrayList<MsType> javaPrimitives) {
-		for (MsType primitivType : javaPrimitives) {
-			types.put(primitivType.getId(), primitivType);
-		}
-	}
-	
-	public void instantiateRefTypes(NodeList typeNodes){
-		for(int i=0; i<typeNodes.getLength(); i++){
-			// regarder ici si c est deja present dans les primitives 
-			Element refNode = (Element)typeNodes.item(i);
-			MsPrimitif ref = new MsPrimitif(refNode.getAttribute("id"));
-			this.types.put(ref.getId(), ref);
-		}
-	}
 	
 	public void instantiateEntityTypes(NodeList entityNodes){
 		for(int i=0; i<entityNodes.getLength(); i++){
 			Element entityNode = (Element)entityNodes.item(i);
 			MsEntity entity = new MsEntity(entityNode.getAttribute("id"));
 			entities.put(entity.getName(), entity);
-			MsReference entityRef = new MsReference(entity);
-			types.put(entityRef.getId(), entityRef);
 		}
 	}
 	
@@ -161,8 +130,8 @@ public class MiniSpecParser {
 			MsList list = new MsList(listNode.getAttribute("id"), type);
 			String min = listNode.getAttribute("min");
 			String max = listNode.getAttribute("max");
-			list.min = min==""?0:Integer.parseInt(min);
-			list.max = min==""?0:Integer.parseInt(max);
+			list.setMin(min==""?0:Integer.parseInt(min));
+			list.setMax(min==""?0:Integer.parseInt(max));
 			
 			this.types.put(list.getId(), list);
 		}

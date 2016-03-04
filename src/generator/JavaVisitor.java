@@ -15,7 +15,6 @@ import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
-import modelMiniSpec.MsPrimitif;
 import modelMiniSpec.MsReference;
 import modelParameter.PrmConfig;
 
@@ -34,10 +33,10 @@ public class JavaVisitor extends LangageVisitor {
 	public void visit(MsModel o) {
 
 		// creation du package sous forme de dossier
-		File dir = new File("src/"+o.name);
+		File dir = new File("src/"+o.getName());
 		dir.mkdir();
 		// parcours des entities du package
-		for (MsEntity entitie : o.entities) {
+		for (MsEntity entitie : o.getEntities()) {
 			importBlock = "";
 			header = "";
 			footer = "\n }";
@@ -47,25 +46,25 @@ public class JavaVisitor extends LangageVisitor {
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
-			listeclass.put(entitie.name, importBlock+header + declarationBloc + methodBloc
+			listeclass.put(entitie.getName(), importBlock+header + declarationBloc + methodBloc
 					+ footer);
 		}
 	}
 
 	@Override
 	public void visit(MsEntity o) {
-		importBlock += "package " + mdl.name + "; \n\n";
+		importBlock += "package " + mdl.getName() + "; \n\n";
 		if(o.getParent()!=null){
 			this.lastVisitedTypeName = "";
 			o.getParent().accept(this);
-			header += "public class " + o.name + " extends "+ this.lastVisitedTypeName +" { \n\n";
-			methodBloc += "\tpublic " + o.name + "(){\n\t super();\n\t} \n\n";
+			header += "public class " + o.getName() + " extends "+ this.lastVisitedTypeName +" { \n\n";
+			methodBloc += "\tpublic " + o.getName() + "(){\n\t super();\n\t} \n\n";
 		}else{
-			header += "public class " + o.name + " { \n\n";
-			methodBloc += "\tpublic " + o.name + "(){} \n\n";
+			header += "public class " + o.getName() + " { \n\n";
+			methodBloc += "\tpublic " + o.getName() + "(){} \n\n";
 		}
 		
-		for (MsAttribute attrib : o.attributes) {
+		for (MsAttribute attrib : o.getAttributes()) {
 			attrib.accept(this);
 		}
 		declarationBloc += "\n";
@@ -81,11 +80,11 @@ public class JavaVisitor extends LangageVisitor {
 	public void visit(MsAttribute o) {
 		this.lastVisitedTypeName = "";
 		
-		o.type.accept(this);
+		o.getType().accept(this);
 		
 		// faire un o.type.accept(self) et des visit pour mjtype en stockant la decla
 		declarationBloc += "\tprivate " + lastVisitedTypeName + " "
-				+ (o.name).toLowerCase() + "; \n";
+				+ (o.getName()).toLowerCase() + "; \n";
 		methodBloc += getSetter(o);
 		methodBloc += getGetter(o);
 
@@ -93,45 +92,39 @@ public class JavaVisitor extends LangageVisitor {
 	
 	@Override
 	public void visit(MsList list){
-		entityImports.add(list.getImportPath());
+		//entityImports.add(list.getImportPath());
 		lastVisitedTypeName += "ArrayList<";
-		list.type.accept(this);
+		list.getType().accept(this);
 		lastVisitedTypeName += ">";
 	}
 	
 	@Override
 	public void visit(MsReference ref){
-		entityImports.add(ref.getImportPath());
+		//entityImports.add(ref.getImportPath());
 		lastVisitedTypeName += ref.getId();
-	}
-	
-	@Override
-	public void visit(MsPrimitif prim){
-		entityImports.add(prim.getImportPath());
-		lastVisitedTypeName += prim.getId();
 	}
 	
 	
 	/** GETTERS/SETTER BUILDER **/
 	private String getSetter(MsAttribute o) {
 		String setter = "";
-		setter += "\tpublic void set" + o.name.substring(0, 1).toUpperCase()
-				+ o.name.substring(1) + "(" + lastVisitedTypeName + " "
-				+ o.name.toLowerCase() + "){\n\t\tthis." + o.name.toLowerCase()
-				+ "=" + o.name.toLowerCase() + ";\n\t}\n\n";
+		setter += "\tpublic void set" + o.getName().substring(0, 1).toUpperCase()
+				+ o.getName().substring(1) + "(" + lastVisitedTypeName + " "
+				+ o.getName().toLowerCase() + "){\n\t\tthis." + o.getName().toLowerCase()
+				+ "=" + o.getName().toLowerCase() + ";\n\t}\n\n";
 		return setter;
 	}
 
 	private String getGetter(MsAttribute o) {
 		String getter = "";
 		getter += "\tpublic " + lastVisitedTypeName + " get"
-				+ o.name.substring(0, 1).toUpperCase() + o.name.substring(1)
-				+ "(){\n\t\treturn " + o.name.toLowerCase() + ";\n\t}\n\n";
+				+ o.getName().substring(0, 1).toUpperCase() + o.getName().substring(1)
+				+ "(){\n\t\treturn " + o.getName().toLowerCase() + ";\n\t}\n\n";
 		return getter;
 	}
 	
 	private String getInitialisation(MsAttribute attribut){
-		return attribut.name + " = " + attribut.type.getDefaultValue();
+		return attribut.getName() + " = " + attribut.getType().getDefaultValue();
 	}
 	
 	
@@ -148,7 +141,7 @@ public class JavaVisitor extends LangageVisitor {
 			Writer writer = null;
 
 			try {
-				File file = new File("src/"+mdl.name + "/" + cle + ".java");
+				File file = new File("src/"+mdl.getName() + "/" + cle + ".java");
 				writer = new BufferedWriter(new OutputStreamWriter(
 						new FileOutputStream(file), "utf-8"));
 				writer.write(valeur);

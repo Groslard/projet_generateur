@@ -31,6 +31,14 @@ public class MsModel {
 		return null;
 	}
 	
+	public ArrayList<MsEntity> getEntities() {
+		return entities;
+	}
+
+	public void setEntities(ArrayList<MsEntity> entities) {
+		this.entities = entities;
+	}
+
 	@Override
 	public String toString() {
 		String res = "MjPackage [name=" + name + ", \nentities=";

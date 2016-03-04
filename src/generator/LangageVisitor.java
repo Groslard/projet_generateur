@@ -7,7 +7,6 @@ import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
-import modelMiniSpec.MsPrimitif;
 import modelMiniSpec.MsReference;
 import modelParameter.PrmConfig;
 
@@ -39,6 +38,5 @@ public abstract class LangageVisitor {
 	public abstract void visit(MsAttribute o);
 	public abstract void visit(MsList list);
 	public abstract void visit(MsReference ref);
-	public abstract void visit(MsPrimitif prim);
 
 }
