@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +18,10 @@ import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
 import modelMiniSpec.MsReference;
+import modelMiniSpec.MsType;
 import modelParameter.PrmConfig;
+import modelParameter.PrmParameter;
+
 
 public class JavaVisitor extends LangageVisitor {
 	
@@ -156,6 +161,32 @@ public class JavaVisitor extends LangageVisitor {
 		}
 		
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Files Generated");
+	}
+
+	
+	// a modifier pour prendre en compte chaque entity
+	@Override
+	public Set<String> getImport() {
+		ArrayList<MsType>types= new ArrayList<>();
+		Set<String>listeImport= new HashSet<String>();
+		//recuperation de tous les types 
+		for (MsEntity entitie:mdl.getEntities()){
+			for(MsAttribute attribute: entitie.getAttributes()){
+				types.add(attribute.getType());
+			}
+		}
+		
+		for(MsType type:types){
+			// recupere le type  dans conf correspondant au type
+			PrmParameter para=conf.getParameterPrimitif(type.getId());
+			if(para.getClass().getName().equals("PrmPrimitif")){
+				
+			}
+			listeImport.add(type.getId());
+		}
+		
+		
+		return null;
 	}
 
 }

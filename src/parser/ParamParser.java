@@ -63,10 +63,10 @@ public class ParamParser {
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
 			if (childNode.getNodeName() == "model") {
-				prmConfig.addparameters(readModelNode((Element) childNode));
+				prmConfig.addparametersModel(readModelNode((Element) childNode));
 			}
 			if (childNode.getNodeName() == "primitive") {
-				prmConfig.addparameters(readPrimitifNode((Element) childNode));
+				prmConfig.addparametersPrimitif(readPrimitifNode((Element) childNode));
 			}
 		}
 		return prmConfig;

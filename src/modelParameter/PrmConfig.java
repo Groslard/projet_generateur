@@ -9,17 +9,24 @@ public class PrmConfig {
 
 	String languageType;
 
-	HashMap<String, PrmParameter> params;
+	HashMap<String, PrmModel> paramsModel;
+	HashMap<String, PrmPrimitif> paramsPrimitif;
 
 	public PrmConfig() {
 		super();
-		params = new HashMap<String, PrmParameter>();
+		paramsModel = new HashMap<String, PrmModel>();
+		paramsPrimitif = new HashMap<String, PrmPrimitif>();
 	}
 
-	public void addparameters(PrmParameter paremetre) {
-		params.put(paremetre.getName(), paremetre);
+	public void addparametersModel(PrmModel paremetreModel) {
+		paramsModel.put(paremetreModel.getName(), paremetreModel);
 	}
 
+	public void addparametersPrimitif(PrmPrimitif paremetrePrimitif) {
+		paramsPrimitif.put(paremetrePrimitif.getName(), paremetrePrimitif);
+	}
+	
+	
 	public String getLanguageType() {
 		return languageType;
 	}
@@ -28,29 +35,53 @@ public class PrmConfig {
 		this.languageType = languageType;
 	}
 
-	public PrmParameter getParameter(String clefRecherche) {
+	public PrmParameter getParameterModel(String clefRecherche) {
 
-		return params.get(clefRecherche);
+		return paramsModel.get(clefRecherche);
 	}
+	
+	public PrmParameter getParameterPrimitif(String clefRecherche) {
 
-	public ArrayList<String> getListeParameter() {
+		return paramsPrimitif.get(clefRecherche);
+	}
+	
+
+	public ArrayList<String> getListeParameterAll() {
 		ArrayList<String>listeStringParam= new ArrayList<>();
 
-		Set<String> cles = params.keySet();
-		Iterator<String> it = cles.iterator();
-		while (it.hasNext()){
-			listeStringParam.add(it.next());
+		Set<String> clesMod = paramsModel.keySet();
+		Iterator<String> itModel = clesMod.iterator();
+		while (itModel.hasNext()){
+			listeStringParam.add(itModel.next());
 		}
+		
+		
+		Set<String> clesPrim = paramsModel.keySet();
+		Iterator<String> itPrim = clesPrim.iterator();
+		while (itPrim.hasNext()){
+			listeStringParam.add(itPrim.next());
+		}
+		
 		
 		return listeStringParam;
 	}
 
-	public HashMap<String, PrmParameter> getParams() {
-		return params;
+	public HashMap<String, PrmModel> getParamsModel() {
+		return paramsModel;
 	}
 
-	public void setParams(HashMap<String, PrmParameter> params) {
-		this.params = params;
+	public void setParamsModel(HashMap<String, PrmModel> paramsModel) {
+		this.paramsModel = paramsModel;
 	}
+
+	public HashMap<String, PrmPrimitif> getParamsPrimitif() {
+		return paramsPrimitif;
+	}
+
+	public void setParamsPrimitif(HashMap<String, PrmPrimitif> paramsPrimitif) {
+		this.paramsPrimitif = paramsPrimitif;
+	}
+
+	
 
 }

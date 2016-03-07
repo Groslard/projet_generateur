@@ -12,14 +12,14 @@ public class TestParserParam {
 		PrmConfig pkg = parser.getMetaInstance();
 		
 		// test de la liste de PrmParameter
-		for (String nomEntities : pkg.getListeParameter()) {
+		for (String nomEntities : pkg.getListeParameterAll()) {
 			System.out.println(nomEntities);
 		}
 		
 		
 		//test du get
 		
-		PrmParameter paramTest=pkg.getParameter("set");
+		PrmParameter paramTest=pkg.getParameterPrimitif("set");
 		System.out.println("le path d'import du set est : "+paramTest.getPkg());
 	}
 

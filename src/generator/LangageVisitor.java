@@ -2,6 +2,7 @@ package generator;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
@@ -38,5 +39,5 @@ public abstract class LangageVisitor {
 	public abstract void visit(MsAttribute o);
 	public abstract void visit(MsList list);
 	public abstract void visit(MsReference ref);
-
+	public abstract Set<String> getImport();
 }
