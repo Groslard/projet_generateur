@@ -9,10 +9,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import modelMiniSpec.MsArray;
 import modelMiniSpec.MsAttribute;
+import modelMiniSpec.MsCollection;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
+import modelMiniSpec.MsSet;
 import modelMiniSpec.MsType;
 import modelMiniSpec.MsUnresolvedType;
 import modelMiniSpec.UnresolveObject;
@@ -60,8 +63,9 @@ public class MiniSpecParser {
 		this.document = document;
 	}
 
-	/** EXPORT **/
-	public MsModel getMetaInstance() {
+	/** EXPORT 
+	 * @throws Exception **/
+	public MsModel getMetaInstance() throws Exception {
 		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
 		this.resolveTypes();
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
@@ -69,8 +73,9 @@ public class MiniSpecParser {
 	}
 
 	
-	/** READER METHODS **/
-	private ArrayList<MsModel> readModelsNode(Element modelsNode) {
+	/** READER METHODS 
+	 * @throws Exception **/
+	private ArrayList<MsModel> readModelsNode(Element modelsNode) throws Exception {
 		ArrayList<MsModel> res = new ArrayList<MsModel>();
 		NodeList nl = modelsNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -82,7 +87,7 @@ public class MiniSpecParser {
 		return res;
 	}
 	
-	public MsModel readModelNode(Element modelNode) {
+	public MsModel readModelNode(Element modelNode) throws Exception {
 
 		MsModel mdl = new MsModel(modelNode.getAttribute("name"));
 
@@ -100,7 +105,7 @@ public class MiniSpecParser {
 		return mdl;
 	}
 
-	public MsEntity readEntityNode(Element entityNode) {
+	public MsEntity readEntityNode(Element entityNode) throws Exception {
 		MsEntity entity = new MsEntity(entityNode.getAttribute("id"));
 		entities.put(entity.getName(), entity);
 		
@@ -144,16 +149,29 @@ public class MiniSpecParser {
 		}
 	}
 	
-	private void instantiateType(Element typeDefNode) {
+	private void instantiateType(Element typeDefNode) throws Exception {
+		MsCollection collection = null;
+		String _min = typeDefNode.getAttribute("min");
+		String _max = typeDefNode.getAttribute("max");
+		int min = _min==""?0:Integer.parseInt(_min);
+		int max = _max==""?0:Integer.parseInt(_max);
 		MsType type = new MsUnresolvedType(typeDefNode.getAttribute("type"));
-		MsList list = new MsList(typeDefNode.getAttribute("id"), type);
-		String min = typeDefNode.getAttribute("min");
-		String max = typeDefNode.getAttribute("max");
-		list.setMin(min==""?0:Integer.parseInt(min));
-		list.setMax(min==""?0:Integer.parseInt(max));
 		
-		this.typesDef.put(list.getId(), list);
-		this.unresolvedObjects.add(list);
+		if (typeDefNode.getNodeName() == "listdef")
+			collection = new MsList(typeDefNode.getAttribute("id"), type, min, max);
+		else if (typeDefNode.getNodeName() == "setdef")
+			collection = new MsSet(typeDefNode.getAttribute("id"), type, min, max);
+		else if (typeDefNode.getNodeName() == "arraydef"){
+			if(_max == "")
+				throw new Exception("Attribute max absent de la defnition d array");
+			collection = new MsArray(typeDefNode.getAttribute("id"), type, max);
+		}
+		
+		if(collection == null)
+			return;
+		
+		this.typesDef.put(collection.getId(), collection);
+		this.unresolvedObjects.add(collection);
 	}
 
 	private void resolveTypes() {

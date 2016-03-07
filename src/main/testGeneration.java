@@ -8,11 +8,11 @@ import parser.ParamParser;
 
 public class testGeneration {
 
-	public static void main(String[] args) {
-		ParamParser paramParser= new ParamParser("C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\imports.xml");
+	public static void main(String[] args) throws Exception {
+		ParamParser paramParser= new ParamParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\imports.xml");
 		PrmConfig prmConfig =paramParser.getMetaInstance();
 		
-		MiniSpecParser parser = new MiniSpecParser("C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\entity.xml");
+		MiniSpecParser parser = new MiniSpecParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\entity.xml");
 		parser.setPrimitives(prmConfig.getPrimitivesNames());
 		MsModel pkg = parser.getMetaInstance();
 

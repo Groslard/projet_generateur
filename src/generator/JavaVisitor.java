@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import modelMiniSpec.MsArray;
 import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
@@ -170,43 +171,15 @@ public class JavaVisitor extends LangageVisitor {
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Files Generated");
 	}
 
-	// // a modifier pour prendre en compte chaque entity
-	// @Override
-	// public Set<String> getImport() {
-	// ArrayList<MsType>types= new ArrayList<>();
-	// Set<String>listeImport= new HashSet<String>();
-	// //recuperation de tous les types
-	// for (MsEntity entitie: mdl.getEntities()){
-	// for(MsAttribute attribute: entitie.getAttributes()){
-	// types.add(attribute.getType());
-	// }
-	// }
-	//
-	// for(MsType type:types){
-	// System.out.println(type);
-	// // recupere le type dans conf correspondant au type
-	// PrmParameter paraPrimitif=conf.getParameterPrimitif(type.getId());
-	// if(paraPrimitif!=null){
-	// if(paraPrimitif.getPkg()!=null){
-	// listeImport.add(paraPrimitif.getPkg());
-	// }
-	// }
-	// PrmParameter paraModel=conf.getParameterModel(type.getId());
-	// if(paraModel!=null){
-	// listeImport.add(paraModel.getPkg()+"."+paraModel.getName());
-	// }
-	//
-	//
-	// listeImport.add(type.getId());
-	// }
-	//
-	//
-	// return listeImport;
-	// }
 
 	public void visit(MsSet msSet) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void visit(MsArray msArray) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

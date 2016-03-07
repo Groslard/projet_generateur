@@ -1,6 +1,5 @@
 <java>
-	<model name="Balise" package="GrosPaquet"/>
-	<model name="Coucou" package="GrosPaquet"/>
+	<model name="toto" package="GrosPaquet"/>
 	<primitive name="String" type="String"/>
 	<primitive name="int" type="Integer"/>
 	<primitive name="list" type="ArrayList" package="java.util.ArrayList"/>
