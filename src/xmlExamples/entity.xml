@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <models>
 	<model name="toto">
-		<collections>
-			<listdef id="#2" min="10" max="20" typeid="#3"/>
-			<listdef id="#3" type="String"/>
-			<listdef id="#4" type="String"/>
-			<setdef id="#5" type="String"/>
-		</collections>
-		
-		<entity id="Balise" parent="list-list-Coucou">		
+		<listdef id="#2" min="10" max="20" type="#3"/>
+		<listdef id="#3" type="String"/>
+		<entity id="Balise" parent="#2">
+			<listdef id="#4" type="String"/>		
 			<attribute name="monString" type="String" />
-			<attribute name="mesCoucou" typeid="#2"/>
-			<attribute name="noms"  typeid="#4"/>
-			
+			<attribute name="noms"  type="#4"/>
 		</entity>
-		
-		<entity id="Coucou" >
+		<entity id="Coucou" parent="Balise">
+			<listdef id="#5" type="String"/>
 			<attribute name="Nom" type="String"/>
 			<attribute name="Numero" type="int"/>
 			<attribute name="mesStrings" type="#5"/>

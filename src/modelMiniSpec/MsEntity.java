@@ -4,7 +4,7 @@ import generator.JavaVisitor;
 
 import java.util.ArrayList;
 
-public class MsEntity {
+public class MsEntity implements UnresolveObject{
 	String name;
 	ArrayList<MsAttribute> attributes;
 	MsType parent;
@@ -50,6 +50,16 @@ public class MsEntity {
 
 	public void setParent(MsType parents) {
 		this.parent = parents;
+	}
+
+	@Override
+	public MsType getUnresolvedType() {
+		return parent;
+	}
+
+	@Override
+	public void setResolvedType(MsType resolvedType) {
+		this.parent = resolvedType;
 	}
 	 
 }

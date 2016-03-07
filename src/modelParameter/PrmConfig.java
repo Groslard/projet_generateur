@@ -46,7 +46,7 @@ public class PrmConfig {
 	}
 	
 	
-	public ArrayList<String> getPrimitiveName() {
+	public ArrayList<String> getPrimitivesNames() {
 		ArrayList<String>listeStringParam= new ArrayList<>();
 		
 		Set<String> clesPrim = paramsPrimitif.keySet();

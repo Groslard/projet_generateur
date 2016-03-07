@@ -2,7 +2,7 @@ package modelMiniSpec;
 
 import generator.JavaVisitor;
 
-public class MsAttribute {
+public class MsAttribute implements UnresolveObject {
 	String name;
 	MsType type;
 	
@@ -36,4 +36,14 @@ public class MsAttribute {
 		 visitor.visit(this);
 		 
 	 }
+
+	@Override
+	public MsType getUnresolvedType() {
+		return type;
+	}
+
+	@Override
+	public void setResolvedType(MsType resolvedType) {
+		this.type = resolvedType;
+	}
 }

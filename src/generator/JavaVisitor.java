@@ -205,7 +205,6 @@ public class JavaVisitor extends LangageVisitor {
 
 	public void visit(MsType msType) {
 		msType.setGeneratedName(conf.getParameterPrimitif(msType.getId()).getName());
-		
 	}
 
 }

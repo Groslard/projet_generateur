@@ -13,8 +13,9 @@ import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
-import modelMiniSpec.MsReference;
 import modelMiniSpec.MsType;
+import modelMiniSpec.MsUnresolvedType;
+import modelMiniSpec.UnresolveObject;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,6 +28,8 @@ import java.util.logging.*;
 public class MiniSpecParser {
 	Document document;
 	HashMap<String, MsEntity> entities;
+	HashMap<String, MsType> typesDef;
+	ArrayList<UnresolveObject> unresolvedObjects;
 
 	/** CONSTRUCTOR **/
 	public MiniSpecParser(String xmlPath) {
@@ -35,7 +38,9 @@ public class MiniSpecParser {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		entities = new HashMap<String, MsEntity>();
-
+		
+		typesDef = new HashMap<String, MsType>();
+		unresolvedObjects = new ArrayList<UnresolveObject>();
 
 		document = null;
 		try {
@@ -57,47 +62,67 @@ public class MiniSpecParser {
 
 	/** EXPORT **/
 	public MsModel getMetaInstance() {
-		MsModel mdl = readPackageNode(document.getDocumentElement());
+		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
+		this.resolveTypes();
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
-
 		return mdl;
 	}
 
+	
 	/** READER METHODS **/
-	public MsModel readPackageNode(Element packageNode) {
-
-		MsModel mdl = new MsModel(packageNode.getAttribute("name"));
-
-		// Initialisation des types
-		instantiateEntityTypes(packageNode.getElementsByTagName("entity"));
-		instantiateListTypes(packageNode.getElementsByTagName("listdef"));
-
-		NodeList nl = packageNode.getChildNodes();
+	private ArrayList<MsModel> readModelsNode(Element modelsNode) {
+		ArrayList<MsModel> res = new ArrayList<MsModel>();
+		NodeList nl = modelsNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
+			if (childNode.getNodeName() == "model") {
+				res.add(readModelNode((Element) childNode));
+			}
+		}
+		return res;
+	}
+	
+	public MsModel readModelNode(Element modelNode) {
+
+		MsModel mdl = new MsModel(modelNode.getAttribute("name"));
+
+		NodeList nl = modelNode.getChildNodes();
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node childNode = nl.item(i);
+			if(childNode.getNodeType() != childNode.ELEMENT_NODE)
+				continue;
+			System.out.println(childNode.getNodeType());
 			if (childNode.getNodeName() == "entity") {
 				mdl.addEntity(readEntityNode((Element) childNode));
+			}else{
+				instantiateType((Element) childNode);
 			}
 		}
 		return mdl;
 	}
 
 	public MsEntity readEntityNode(Element entityNode) {
-		MsEntity entity = entities.get(entityNode.getAttribute("id"));
+		MsEntity entity = new MsEntity(entityNode.getAttribute("id"));
+		entities.put(entity.getName(), entity);
 		
 		// recuperation du parents s'il existe
 		String nomParent = entityNode.getAttribute("parent");
 		if (!nomParent.isEmpty() && nomParent != null) {
-			entity.setParent(types.get(nomParent));
+			entity.setParent(new MsUnresolvedType(nomParent));
+			unresolvedObjects.add(entity);
 		}
 
 		NodeList nl = entityNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
+			if(childNode.getNodeType() != childNode.ELEMENT_NODE)
+				continue;
 			if (childNode.getNodeName() == "attribute") {
 				MsAttribute attr = readAttributeNode((Element) childNode);
 				if (attr != null)
 					entity.addAttribute(attr);
+			}else{
+				instantiateType((Element) childNode);
 			}
 		}
 		return entity;
@@ -105,36 +130,34 @@ public class MiniSpecParser {
 
 	public MsAttribute readAttributeNode(Element attributeNode) {
 		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"));
-
 		String typeName = attributeNode.getAttribute("type-id");
-
-		if (typeName == null)
-			return null;
-		attribute.setType(this.types.get(typeName));
+		attribute.setType(new MsUnresolvedType(typeName));
 		return attribute;
 	}
 
 	
-	public void instantiateEntityTypes(NodeList entityNodes){
-		for(int i=0; i<entityNodes.getLength(); i++){
-			Element entityNode = (Element)entityNodes.item(i);
-			MsEntity entity = new MsEntity(entityNode.getAttribute("id"));
-			entities.put(entity.getName(), entity);
+	/** GESTION DES TYPES **/
+	public void setPrimitives(ArrayList<String> primitivesNames){
+		for(String primName:primitivesNames){
+			MsEntity primEntity = new MsEntity(primName);
+			this.entities.put(primName, primEntity);
 		}
 	}
 	
-	public void instantiateListTypes(NodeList listNodes){
-		for(int i=0; i<listNodes.getLength(); i++){
-			Element listNode = (Element)listNodes.item(i);
-			MsType type = this.types.get(listNode.getAttribute("type-list"));
-			MsList list = new MsList(listNode.getAttribute("id"), type);
-			String min = listNode.getAttribute("min");
-			String max = listNode.getAttribute("max");
-			list.setMin(min==""?0:Integer.parseInt(min));
-			list.setMax(min==""?0:Integer.parseInt(max));
-			
-			this.types.put(list.getId(), list);
-		}
+	private void instantiateType(Element typeDefNode) {
+		MsType type = new MsUnresolvedType(typeDefNode.getAttribute("type"));
+		MsList list = new MsList(typeDefNode.getAttribute("id"), type);
+		String min = typeDefNode.getAttribute("min");
+		String max = typeDefNode.getAttribute("max");
+		list.setMin(min==""?0:Integer.parseInt(min));
+		list.setMax(min==""?0:Integer.parseInt(max));
+		
+		this.typesDef.put(list.getId(), list);
+		this.unresolvedObjects.add(list);
 	}
 
+	private void resolveTypes() {
+		for(UnresolveObject object:this.unresolvedObjects)
+			object.resolve(typesDef, entities);
+	}
 }

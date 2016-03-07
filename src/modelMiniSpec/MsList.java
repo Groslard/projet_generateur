@@ -2,11 +2,11 @@ package modelMiniSpec;
 
 import generator.JavaVisitor;
 
-public class MsList extends MsType {
+public class MsList extends MsType implements UnresolveObject {
 	MsType type;
 	// minimum variables in the list
 	int min;
-	// Maximum variables in the list (0 if no limits)
+	// Maximum variables in the list
 	int max;
 
 	public MsList(String id, MsType type) {
@@ -55,4 +55,14 @@ public class MsList extends MsType {
 	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
+
+	@Override
+	public MsType getUnresolvedType() {
+		return type;
+	}
+
+	@Override
+	public void setResolvedType(MsType resolvedType) {
+		this.type = resolvedType;
+	}
 }
