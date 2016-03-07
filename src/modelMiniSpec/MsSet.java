@@ -2,15 +2,15 @@ package modelMiniSpec;
 
 import generator.JavaVisitor;
 
-public class MsList extends MsCollection {
+public class MsSet extends MsCollection {
 
-	public MsList(String id, MsType type) {
+	public MsSet(String id, MsType type) {
 		super();
 		this.id = id;
 		this.type = type;
 	}
 
-	public MsList(String id, MsType type, int min, int max) {
+	public MsSet(String id, MsType type, int min, int max) {
 		super();
 		this.id = id;
 		this.type = type;
@@ -20,7 +20,7 @@ public class MsList extends MsCollection {
 
 	@Override
 	public String toString() {
-		return "MsList [type=" + type + ", min=" + min + ", max=" + max + "]";
+		return "MsSet [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 	
 	 public void accept(JavaVisitor visitor){

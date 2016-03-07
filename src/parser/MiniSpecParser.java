@@ -91,7 +91,6 @@ public class MiniSpecParser {
 			Node childNode = nl.item(i);
 			if(childNode.getNodeType() != childNode.ELEMENT_NODE)
 				continue;
-			System.out.println(childNode.getNodeType());
 			if (childNode.getNodeName() == "entity") {
 				mdl.addEntity(readEntityNode((Element) childNode));
 			}else{

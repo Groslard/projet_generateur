@@ -5,4 +5,5 @@
 	<primitive name="int" type="Integer"/>
 	<primitive name="list" type="ArrayList" package="Java.util.ArrayList"/>
 	<primitive name="set" type="HashSet" package="Java.util.HashSet" />
+	<primitive name="array" type="Array"/>
 </java>
