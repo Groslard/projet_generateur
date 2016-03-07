@@ -48,6 +48,8 @@ public class JavaVisitor extends LangageVisitor {
 			declarationBloc = "";
 			methodBloc = "";
 			entityImports = new HashSet<>();
+			//initialisation des generatedName pour tous les type des attribut de msentity
+			
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
@@ -56,6 +58,10 @@ public class JavaVisitor extends LangageVisitor {
 		}
 	}
 
+	
+	
+	
+	
 	@Override
 	public void visit(MsEntity o) {
 		importBlock += "package " + mdl.getName() + "; \n\n";
@@ -75,7 +81,7 @@ public class JavaVisitor extends LangageVisitor {
 		declarationBloc += "\n";
 		
 		entityImports.remove(null);
-		for(String path : entityImports)
+		for(String path : getImport())
 			importBlock += "import "+ path+";\n";
 		
 		importBlock += "\n";
@@ -166,11 +172,11 @@ public class JavaVisitor extends LangageVisitor {
 	
 	// a modifier pour prendre en compte chaque entity
 	@Override
-	public Set<String> getImport() {
+	public  Set<String> getImport() {
 		ArrayList<MsType>types= new ArrayList<>();
 		Set<String>listeImport= new HashSet<String>();
 		//recuperation de tous les types 
-		for (MsEntity entitie:mdl.getEntities()){
+		for (MsEntity entitie: mdl.getEntities()){
 			for(MsAttribute attribute: entitie.getAttributes()){
 				types.add(attribute.getType());
 			}
@@ -178,15 +184,28 @@ public class JavaVisitor extends LangageVisitor {
 		
 		for(MsType type:types){
 			// recupere le type  dans conf correspondant au type
-			PrmParameter para=conf.getParameterPrimitif(type.getId());
-			if(para.getClass().getName().equals("PrmPrimitif")){
-				
+			PrmParameter paraPrimitif=conf.getParameterPrimitif(type.getId());
+			if(paraPrimitif!=null){
+				if(paraPrimitif.getPkg()!=null){
+					listeImport.add(paraPrimitif.getPkg());
+				}
 			}
+			PrmParameter paraModel=conf.getParameterPrimitif(type.getId());
+			if(paraModel!=null){
+				listeImport.add(paraModel.getPkg()+"."+paraModel.getName());
+			}
+			
+			
 			listeImport.add(type.getId());
 		}
 		
 		
-		return null;
+		return listeImport;
+	}
+
+	public void visit(MsType msType) {
+		msType.setGeneratedName(conf.getParameterPrimitif(msType.getId()).getName());
+		
 	}
 
 }

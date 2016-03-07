@@ -45,6 +45,20 @@ public class PrmConfig {
 		return paramsPrimitif.get(clefRecherche);
 	}
 	
+	
+	public ArrayList<String> getPrimitiveName() {
+		ArrayList<String>listeStringParam= new ArrayList<>();
+		
+		Set<String> clesPrim = paramsPrimitif.keySet();
+		Iterator<String> itPrim = clesPrim.iterator();
+		while (itPrim.hasNext()){
+			listeStringParam.add(itPrim.next());
+		}
+		
+		return listeStringParam;
+	}
+
+	
 
 	public ArrayList<String> getListeParameterAll() {
 		ArrayList<String>listeStringParam= new ArrayList<>();
@@ -56,7 +70,7 @@ public class PrmConfig {
 		}
 		
 		
-		Set<String> clesPrim = paramsModel.keySet();
+		Set<String> clesPrim = paramsPrimitif.keySet();
 		Iterator<String> itPrim = clesPrim.iterator();
 		while (itPrim.hasNext()){
 			listeStringParam.add(itPrim.next());

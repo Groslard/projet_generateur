@@ -12,7 +12,7 @@ public class TestParserParam {
 		PrmConfig pkg = parser.getMetaInstance();
 		
 		// test de la liste de PrmParameter
-		for (String nomEntities : pkg.getListeParameterAll()) {
+		for (String nomEntities : pkg.getPrimitiveName()) {
 			System.out.println(nomEntities);
 		}
 		

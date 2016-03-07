@@ -27,7 +27,7 @@ public abstract class MsType {
 	}
 	
 	 public void accept(JavaVisitor visitor){
-		 return;
+		 return  visitor.visit(this);;
 	 }
 
 	public String getGeneratedName() {
