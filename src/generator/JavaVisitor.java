@@ -119,12 +119,14 @@ public class JavaVisitor extends LangageVisitor {
 
 	@Override
 	public void visit(MsReference ref) {
-		if (this.conf.getParameterPrimitif(ref.getId()) != null) {
-			this.conf.getParameterPrimitif(ref.getId()).getName();
-		}
+
 		lastVisitedTypeName += ref.getId();
-		if (conf.getImportReference(ref.getId()) != null) {
-			this.importPath.add(conf.getImportReference(ref.getId()));
+		String model=conf.getImportReference(ref.getId());
+		MsModel msModel=ref.getEntity().getModel();
+		if ( conf.getImportReference(ref.getId())!= null) {
+			this.importPath.add(model);
+		}else if (msModel!=null){
+			this.importPath.add(msModel.getName()+"."+ref.getId());
 		}
 
 	}

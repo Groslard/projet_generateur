@@ -29,4 +29,13 @@ public class MsReference extends MsType {
 	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
+
+	public MsEntity getEntity() {
+		return entity;
+	}
+
+	public void setEntity(MsEntity entity) {
+		this.entity = entity;
+	}
+	 
 }

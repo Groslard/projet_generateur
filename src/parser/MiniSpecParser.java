@@ -34,6 +34,9 @@ public class MiniSpecParser {
 	HashMap<String, MsType> typesDef;
 	ArrayList<UnresolveObject> unresolvedObjects;
 
+	MsEntity currentEntity;
+	MsModel currentModel;
+
 	/** CONSTRUCTOR **/
 	public MiniSpecParser(String xmlPath) {
 		super();
@@ -41,7 +44,7 @@ public class MiniSpecParser {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		entities = new HashMap<String, MsEntity>();
-		
+
 		typesDef = new HashMap<String, MsType>();
 		unresolvedObjects = new ArrayList<UnresolveObject>();
 
@@ -63,8 +66,11 @@ public class MiniSpecParser {
 		this.document = document;
 	}
 
-	/** EXPORT 
-	 * @throws Exception **/
+	/**
+	 * EXPORT
+	 * 
+	 * @throws Exception
+	 **/
 	public MsModel getMetaInstance() throws Exception {
 		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
 		this.resolveTypes();
@@ -72,33 +78,36 @@ public class MiniSpecParser {
 		return mdl;
 	}
 
-	
-	/** READER METHODS 
-	 * @throws Exception **/
+	/**
+	 * READER METHODS
+	 * 
+	 * @throws Exception
+	 **/
 	private ArrayList<MsModel> readModelsNode(Element modelsNode) throws Exception {
 		ArrayList<MsModel> res = new ArrayList<MsModel>();
 		NodeList nl = modelsNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
 			if (childNode.getNodeName() == "model") {
+
 				res.add(readModelNode((Element) childNode));
 			}
 		}
 		return res;
 	}
-	
+
 	public MsModel readModelNode(Element modelNode) throws Exception {
 
 		MsModel mdl = new MsModel(modelNode.getAttribute("name"));
-
+		currentModel = mdl;
 		NodeList nl = modelNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
-			if(childNode.getNodeType() != childNode.ELEMENT_NODE)
+			if (childNode.getNodeType() != childNode.ELEMENT_NODE)
 				continue;
 			if (childNode.getNodeName() == "entity") {
 				mdl.addEntity(readEntityNode((Element) childNode));
-			}else{
+			} else {
 				instantiateType((Element) childNode);
 			}
 		}
@@ -106,26 +115,26 @@ public class MiniSpecParser {
 	}
 
 	public MsEntity readEntityNode(Element entityNode) throws Exception {
-		MsEntity entity = new MsEntity(entityNode.getAttribute("id"));
+		MsEntity entity = new MsEntity(entityNode.getAttribute("id"), currentModel);
 		entities.put(entity.getName(), entity);
-		
+
 		// recuperation du parents s'il existe
 		String nomParent = entityNode.getAttribute("parent");
 		if (!nomParent.isEmpty() && nomParent != null) {
 			entity.setParent(new MsUnresolvedType(nomParent));
 			unresolvedObjects.add(entity);
 		}
-
+		currentEntity = entity;
 		NodeList nl = entityNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
-			if(childNode.getNodeType() != childNode.ELEMENT_NODE)
+			if (childNode.getNodeType() != childNode.ELEMENT_NODE)
 				continue;
 			if (childNode.getNodeName() == "attribute") {
 				MsAttribute attr = readAttributeNode((Element) childNode);
 				if (attr != null)
 					entity.addAttribute(attr);
-			}else{
+			} else {
 				instantiateType((Element) childNode);
 			}
 		}
@@ -133,49 +142,48 @@ public class MiniSpecParser {
 	}
 
 	public MsAttribute readAttributeNode(Element attributeNode) {
-		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"));
+		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"), currentEntity);
 		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
 		this.unresolvedObjects.add(attribute);
 		return attribute;
 	}
 
-	
 	/** GESTION DES TYPES **/
-	public void setPrimitives(ArrayList<String> primitivesNames){
-		for(String primName:primitivesNames){
-			MsEntity primEntity = new MsEntity(primName);
+	public void setPrimitives(ArrayList<String> primitivesNames) {
+		for (String primName : primitivesNames) {
+			MsEntity primEntity = new MsEntity(primName, currentModel);
 			this.entities.put(primName, primEntity);
 		}
 	}
-	
+
 	private void instantiateType(Element typeDefNode) throws Exception {
 		MsCollection collection = null;
 		String _min = typeDefNode.getAttribute("min");
 		String _max = typeDefNode.getAttribute("max");
-		int min = _min==""?0:Integer.parseInt(_min);
-		int max = _max==""?0:Integer.parseInt(_max);
+		int min = _min == "" ? 0 : Integer.parseInt(_min);
+		int max = _max == "" ? 0 : Integer.parseInt(_max);
 		MsType type = new MsUnresolvedType(typeDefNode.getAttribute("type"));
-		
+
 		if (typeDefNode.getNodeName() == "listdef")
 			collection = new MsList(typeDefNode.getAttribute("id"), type, min, max);
 		else if (typeDefNode.getNodeName() == "setdef")
 			collection = new MsSet(typeDefNode.getAttribute("id"), type, min, max);
-		else if (typeDefNode.getNodeName() == "arraydef"){
-			if(_max == "")
+		else if (typeDefNode.getNodeName() == "arraydef") {
+			if (_max == "")
 				throw new Exception("Attribute max absent de la defnition d array");
 			collection = new MsArray(typeDefNode.getAttribute("id"), type, max);
 		}
-		
-		if(collection == null)
+
+		if (collection == null)
 			return;
-		
+
 		this.typesDef.put(collection.getId(), collection);
 		this.unresolvedObjects.add(collection);
 	}
 
 	private void resolveTypes() {
-		for(UnresolveObject object:this.unresolvedObjects)
+		for (UnresolveObject object : this.unresolvedObjects)
 			object.resolve(typesDef, entities);
 	}
 }
