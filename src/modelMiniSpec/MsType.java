@@ -26,9 +26,7 @@ public abstract class MsType {
 		this.defaultValue = defaultValue;
 	}
 	
-	 public void accept(JavaVisitor visitor){
-		 visitor.visit(this);
-	 }
+	
 
 	public String getGeneratedName() {
 		return generatedName;
@@ -36,6 +34,11 @@ public abstract class MsType {
 
 	public void setGeneratedName(String generatedName) {
 		this.generatedName = generatedName;
+	}
+
+	public void accept(JavaVisitor javaVisitor) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

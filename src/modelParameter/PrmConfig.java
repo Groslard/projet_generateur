@@ -25,8 +25,7 @@ public class PrmConfig {
 	public void addparametersPrimitif(PrmPrimitif paremetrePrimitif) {
 		paramsPrimitif.put(paremetrePrimitif.getName(), paremetrePrimitif);
 	}
-	
-	
+
 	public String getLanguageType() {
 		return languageType;
 	}
@@ -39,44 +38,39 @@ public class PrmConfig {
 
 		return paramsModel.get(clefRecherche);
 	}
-	
+
 	public PrmParameter getParameterPrimitif(String clefRecherche) {
 
 		return paramsPrimitif.get(clefRecherche);
 	}
-	
-	
+
 	public ArrayList<String> getPrimitivesNames() {
-		ArrayList<String>listeStringParam= new ArrayList<>();
-		
+		ArrayList<String> listeStringParam = new ArrayList<>();
+
 		Set<String> clesPrim = paramsPrimitif.keySet();
 		Iterator<String> itPrim = clesPrim.iterator();
-		while (itPrim.hasNext()){
+		while (itPrim.hasNext()) {
 			listeStringParam.add(itPrim.next());
 		}
-		
+
 		return listeStringParam;
 	}
 
-	
-
 	public ArrayList<String> getListeParameterAll() {
-		ArrayList<String>listeStringParam= new ArrayList<>();
+		ArrayList<String> listeStringParam = new ArrayList<>();
 
 		Set<String> clesMod = paramsModel.keySet();
 		Iterator<String> itModel = clesMod.iterator();
-		while (itModel.hasNext()){
+		while (itModel.hasNext()) {
 			listeStringParam.add(itModel.next());
 		}
-		
-		
+
 		Set<String> clesPrim = paramsPrimitif.keySet();
 		Iterator<String> itPrim = clesPrim.iterator();
-		while (itPrim.hasNext()){
+		while (itPrim.hasNext()) {
 			listeStringParam.add(itPrim.next());
 		}
-		
-		
+
 		return listeStringParam;
 	}
 
@@ -97,5 +91,20 @@ public class PrmConfig {
 	}
 
 	
+	// finir  methode + l'implementer lors du java generateur +reset le set lors de chaque enttity
+	public String getImportReference(String idRecherche) {
+		String retour = "";
+		System.out.println("on recherhce:" +idRecherche);
+		if(paramsPrimitif.get(idRecherche)!=null){
+			return paramsPrimitif.get(idRecherche).getPkg();
+		}
+		if(paramsModel.get(idRecherche)!=null){
+			return paramsModel.get(idRecherche).getPkg()+"."+paramsModel.get(idRecherche).getName();
+		}
+		
+
+
+		return retour;
+	}
 
 }

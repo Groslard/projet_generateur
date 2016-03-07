@@ -129,8 +129,9 @@ public class MiniSpecParser {
 
 	public MsAttribute readAttributeNode(Element attributeNode) {
 		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"));
-		String typeName = attributeNode.getAttribute("type-id");
+		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
+		this.unresolvedObjects.add(attribute);
 		return attribute;
 	}
 

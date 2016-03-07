@@ -3,7 +3,6 @@ package generator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
 import modelMiniSpec.MsAttribute;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
@@ -25,6 +24,9 @@ public abstract class LangageVisitor {
 	/** List of already generated class with source code **/
 	HashMap<String, String> listeclass = new HashMap<>();
 	
+	/**list of import path**/
+	Set<String> importPath;
+	
 	/** List of imports needed for current building class **/
 	HashSet<String> entityImports;
 	
@@ -39,5 +41,4 @@ public abstract class LangageVisitor {
 	public abstract void visit(MsAttribute o);
 	public abstract void visit(MsList list);
 	public abstract void visit(MsReference ref);
-	public abstract Set<String> getImport();
 }
