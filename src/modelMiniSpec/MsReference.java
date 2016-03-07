@@ -10,20 +10,10 @@ public class MsReference extends MsType {
 		this.entity = entity;
 	}
 	
-	public MsReference(MsEntity entity, String defaultValue) {
-		super();
-		this.entity = entity;
-		this.defaultValue = defaultValue;
-	}
-	
+
 	@Override
 	public String toString() {
-		return "MjReference [entity=" + getId() + "]";
-	}
-	
-	@Override
-	public String getId(){
-		return entity.name;
+		return "MjReference [entity="  + getTypeName() + "]";
 	}
 	
 	 public void accept(JavaVisitor visitor){
@@ -36,6 +26,12 @@ public class MsReference extends MsType {
 
 	public void setEntity(MsEntity entity) {
 		this.entity = entity;
+	}
+
+	@Override
+	public String getTypeName() {
+		// TODO Auto-generated method stub
+		return this.entity.getName();
 	}
 	 
 }

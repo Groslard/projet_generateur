@@ -1,6 +1,5 @@
 package modelMiniSpec;
 
-import generator.JavaVisitor;
 
 public abstract class MsCollection extends MsType implements UnresolveObject {
 	MsType type;
@@ -32,14 +31,14 @@ public abstract class MsCollection extends MsType implements UnresolveObject {
 	public void setMax(int max) {
 		this.max = max;
 	}
-
-	@Override
-	public MsType getUnresolvedType() {
-		return type;
-	}
-
+	
 	@Override
 	public void setResolvedType(MsType resolvedType) {
 		this.type = resolvedType;
 	}
+	@Override
+	public MsType getUnresolvedType() {
+		return this.type;
+	}
+	
 }

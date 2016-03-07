@@ -4,9 +4,8 @@ import generator.JavaVisitor;
 
 public class MsArray extends MsCollection {
 
-	public MsArray(String id, MsType type, int max) {
+	public MsArray( MsType type, int max) {
 		super();
-		this.id = id;
 		this.type = type;
 		this.max = max;
 	}
@@ -19,4 +18,10 @@ public class MsArray extends MsCollection {
 	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
+
+	@Override
+	public String getTypeName() {
+		// TODO Auto-generated method stub
+		return "array";
+	}
 }

@@ -6,10 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,9 +18,7 @@ import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
 import modelMiniSpec.MsReference;
 import modelMiniSpec.MsSet;
-import modelMiniSpec.MsType;
 import modelParameter.PrmConfig;
-import modelParameter.PrmParameter;
 
 public class JavaVisitor extends LangageVisitor {
 
@@ -120,15 +116,15 @@ public class JavaVisitor extends LangageVisitor {
 	@Override
 	public void visit(MsReference ref) {
 
-		lastVisitedTypeName += ref.getId();
-		String model=conf.getImportReference(ref.getId());
+		lastVisitedTypeName += ref.getTypeName();
+		String model=conf.getImportReference(ref.getTypeName());
 		MsModel msModel=ref.getEntity().getModel();
-		if ( conf.getImportReference(ref.getId())!= null) {
+		if ( conf.getImportReference(ref.getTypeName())!= null) {
 			this.importPath.add(model);
 		}else if (msModel!=null){
 			//teste si la classe est a l'exterieur du package
 			if(!msModel.getName().equals(mdl.getName())){
-				this.importPath.add(msModel.getName()+"."+ref.getId());
+				this.importPath.add(msModel.getName()+"."+ref.getTypeName());
 			}
 			
 		}
@@ -151,9 +147,7 @@ public class JavaVisitor extends LangageVisitor {
 		return getter;
 	}
 
-	private String getInitialisation(MsAttribute attribut) {
-		return attribut.getName() + " = " + attribut.getType().getDefaultValue();
-	}
+
 
 	/** GENERATION METHOD **/
 	public void generate() {

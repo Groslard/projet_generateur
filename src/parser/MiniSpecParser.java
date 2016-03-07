@@ -103,7 +103,7 @@ public class MiniSpecParser {
 		NodeList nl = modelNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
-			if (childNode.getNodeType() != childNode.ELEMENT_NODE)
+			if (childNode.getNodeType() != Node.ELEMENT_NODE)
 				continue;
 			if (childNode.getNodeName() == "entity") {
 				mdl.addEntity(readEntityNode((Element) childNode));
@@ -128,7 +128,7 @@ public class MiniSpecParser {
 		NodeList nl = entityNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
-			if (childNode.getNodeType() != childNode.ELEMENT_NODE)
+			if (childNode.getNodeType() != Node.ELEMENT_NODE)
 				continue;
 			if (childNode.getNodeName() == "attribute") {
 				MsAttribute attr = readAttributeNode((Element) childNode);
@@ -166,19 +166,19 @@ public class MiniSpecParser {
 		MsType type = new MsUnresolvedType(typeDefNode.getAttribute("type"));
 
 		if (typeDefNode.getNodeName() == "listdef")
-			collection = new MsList(typeDefNode.getAttribute("id"), type, min, max);
+			collection = new MsList(type, min, max);
 		else if (typeDefNode.getNodeName() == "setdef")
-			collection = new MsSet(typeDefNode.getAttribute("id"), type, min, max);
+			collection = new MsSet(type, min, max);
 		else if (typeDefNode.getNodeName() == "arraydef") {
 			if (_max == "")
 				throw new Exception("Attribute max absent de la defnition d array");
-			collection = new MsArray(typeDefNode.getAttribute("id"), type, max);
+			collection = new MsArray(type, max);
 		}
 
 		if (collection == null)
 			return;
 
-		this.typesDef.put(collection.getId(), collection);
+		this.typesDef.put(typeDefNode.getAttribute("id"), collection);
 		this.unresolvedObjects.add(collection);
 	}
 

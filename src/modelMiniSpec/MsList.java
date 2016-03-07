@@ -6,13 +6,11 @@ public class MsList extends MsCollection {
 
 	public MsList(String id, MsType type) {
 		super();
-		this.id = id;
 		this.type = type;
 	}
 
-	public MsList(String id, MsType type, int min, int max) {
+	public MsList( MsType type, int min, int max) {
 		super();
-		this.id = id;
 		this.type = type;
 		this.min = min;
 		this.max = max;
@@ -26,4 +24,10 @@ public class MsList extends MsCollection {
 	 public void accept(JavaVisitor visitor){
 		 visitor.visit(this);
 	 }
+
+	@Override
+	public String getTypeName() {
+		// TODO Auto-generated method stub
+		return "list";
+	}
 }
