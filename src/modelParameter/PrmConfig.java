@@ -93,13 +93,24 @@ public class PrmConfig {
 	
 	// finir  methode + l'implementer lors du java generateur +reset le set lors de chaque enttity
 	public String getImportReference(String idRecherche) {
-		String retour = "";
-		System.out.println("on recherhce:" +idRecherche);
+		String retour = null;
 		if(paramsPrimitif.get(idRecherche)!=null){
 			return paramsPrimitif.get(idRecherche).getPkg();
 		}
 		if(paramsModel.get(idRecherche)!=null){
 			return paramsModel.get(idRecherche).getPkg()+"."+paramsModel.get(idRecherche).getName();
+		}
+		
+
+
+		return retour;
+	}
+	
+	public String getPackageReference(String modelRechercher) {
+		String retour = null;
+	
+		if(paramsModel.get(modelRechercher)!=null){
+			return paramsModel.get(modelRechercher).getPkg();
 		}
 		
 

@@ -36,9 +36,16 @@ public class JavaVisitor extends LangageVisitor {
 	/** VISIT METHODS **/
 	@Override
 	public void visit(MsModel o) {
-
+		File dir;
 		// creation du package sous forme de dossier
-		File dir = new File("src/" + o.getName());
+		String packageDir =conf.getPackageReference(o.getName());
+		if(packageDir!=null){
+			 dir = new File("src/" + packageDir);
+			 mdl.setName(packageDir);
+		}else{
+			 dir = new File("src/" + o.getName());
+		}
+		
 		dir.mkdir();
 		// parcours des entities du package
 		for (MsEntity entitie : o.getEntities()) {
@@ -155,7 +162,14 @@ public class JavaVisitor extends LangageVisitor {
 			Writer writer = null;
 
 			try {
-				File file = new File("src/" + mdl.getName() + "/" + cle + ".java");
+				File file;
+				String packageDir =conf.getPackageReference( mdl.getName());
+				if(packageDir!=null){
+					System.out.println("src/" + packageDir+ "/" + cle + ".java");
+					file = new File("src/" + packageDir+ "/" + cle + ".java");
+				}else{
+					file = new File("src/" + mdl.getName() + "/" + cle + ".java");
+				}
 				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
 				writer.write(valeur);
 			} catch (IOException ex) {

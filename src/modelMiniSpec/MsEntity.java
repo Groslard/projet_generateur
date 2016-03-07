@@ -8,13 +8,23 @@ public class MsEntity implements UnresolveObject{
 	String name;
 	ArrayList<MsAttribute> attributes;
 	MsType parent;
+	MsModel model;
 	
-	public MsEntity(String name){
+	public MsEntity(String name,MsModel model){
 		this.name = name;
 		attributes = new ArrayList<MsAttribute>(); 
 		this.parent=null;
+		this.model=model;
 	}
 	
+	public MsModel getModel() {
+		return model;
+	}
+
+	public void setModel(MsModel model) {
+		this.model = model;
+	}
+
 	public String getName() {
 		return name;
 	}

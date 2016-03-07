@@ -5,9 +5,19 @@ import generator.JavaVisitor;
 public class MsAttribute implements UnresolveObject {
 	String name;
 	MsType type;
+	MsEntity entity;
 	
-	public MsAttribute(String name){
+	public MsAttribute(String name,MsEntity parentEntity){
 		this.name = name;
+		this.entity=parentEntity;
+	}
+
+	public MsEntity getParentEntity() {
+		return entity;
+	}
+
+	public void setParentEntity(MsEntity parentEntity) {
+		this.entity = parentEntity;
 	}
 
 	public String getName() {
