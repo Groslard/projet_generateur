@@ -126,7 +126,11 @@ public class JavaVisitor extends LangageVisitor {
 		if ( conf.getImportReference(ref.getId())!= null) {
 			this.importPath.add(model);
 		}else if (msModel!=null){
-			this.importPath.add(msModel.getName()+"."+ref.getId());
+			//teste si la classe est a l'exterieur du package
+			if(!msModel.getName().equals(mdl.getName())){
+				this.importPath.add(msModel.getName()+"."+ref.getId());
+			}
+			
 		}
 
 	}
