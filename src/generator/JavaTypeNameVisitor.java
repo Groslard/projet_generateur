@@ -39,7 +39,7 @@ public class JavaTypeNameVisitor extends Visitor{
 	
 	@Override
 	public void visit(MsArray array) {
-		result+=array.getTypeName();
+		result+=array.getType().getTypeName()+"[]";
 		
 	}
 	

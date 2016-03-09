@@ -137,7 +137,7 @@ public class JavaVisitor extends LangageVisitor {
 	}
 
 	/** ADD/REMOVE LIST **/
-	private String getAddToList(MsList o) {
+	private String getAddToList(MsCollection o) {
 		String add = "";
 		add += "\tpublic void add" +currentAttribute.getName().substring(0, 1).toUpperCase() + currentAttribute.getName().substring(1) + "("
 				+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()<"+o.getMax()
@@ -145,7 +145,7 @@ public class JavaVisitor extends LangageVisitor {
 		return add;
 	}
 
-	private String getRemoveFromList(MsList o) {
+	private String getRemoveFromList(MsCollection o) {
 		String remove = "";
 		remove += "\tpublic void  remove" + currentAttribute.getName().substring(0, 1).toUpperCase()
 				+ currentAttribute.getName().substring(1) + "("+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() 
@@ -174,9 +174,16 @@ public class JavaVisitor extends LangageVisitor {
 
 	
 	public void visit(MsSet msSet) {
+		msSet.getType().accept(this);
+		this.importPath.add(conf.getImportReference("set"));
+		if(currentAttribute!=null){
+			collectionMethod += getAddToList(msSet);
+			collectionMethod += getRemoveFromList(msSet);
+		}
 	}
 
 	public void visit(MsArray msArray) {
+		msArray.getType().accept(this);
 	}
 	
 	
