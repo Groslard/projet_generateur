@@ -146,6 +146,18 @@ public class MiniSpecParser {
 		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
 		this.unresolvedObjects.add(attribute);
+		
+		NodeList nl = attributeNode.getChildNodes();
+		for (int i = 0; i < nl.getLength(); i++) {
+			Node childNode = nl.item(i);
+			if (childNode.getNodeType() != Node.ELEMENT_NODE)
+				continue;
+			if (childNode.getNodeName() == "value") {
+				String val = childNode.getTextContent();
+				attribute.getInitialValues().add(val);
+			}
+		}
+		
 		return attribute;
 	}
 

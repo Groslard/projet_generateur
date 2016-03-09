@@ -1,14 +1,9 @@
 package generator;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
-import modelMiniSpec.MsAttribute;
-import modelMiniSpec.MsEntity;
-import modelMiniSpec.MsList;
+
 import modelMiniSpec.MsModel;
-import modelMiniSpec.MsReference;
-import modelMiniSpec.MsType;
 import modelParameter.PrmConfig;
 
 public abstract class LangageVisitor extends Visitor {
@@ -32,5 +27,4 @@ public abstract class LangageVisitor extends Visitor {
 	
 	/** user configuration parsed **/
 	PrmConfig conf;
-
 }

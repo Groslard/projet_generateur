@@ -118,7 +118,6 @@ public class JavaVisitor extends LangageVisitor {
 			collectionMethod += getAddToList(list);
 			collectionMethod += getRemoveFromList(list);
 		}
-		
 	}
 
 	@Override
@@ -175,13 +174,9 @@ public class JavaVisitor extends LangageVisitor {
 
 	
 	public void visit(MsSet msSet) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void visit(MsArray msArray) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	
@@ -220,5 +215,4 @@ public class JavaVisitor extends LangageVisitor {
 
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Files Generated");
 	}
-
 }

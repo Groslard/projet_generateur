@@ -5,17 +5,29 @@
 
 		<listdef id="#2" min="10" max="20" type="#3"/>
 		<listdef id="#3" type="String"/>
+		<setdef id="#10" type="String"/> 
+		<arraydef id="#11" type="int" max="8" /> 
 
 		<entity id="Balise" parent="#2">
 			<listdef id="#4" type="String"/>		
-			<attribute name="monString" type="String" />
+			<attribute name="monString" type="String">
+				<value>"coucou"</value>
+			</attribute>
 			<attribute name="noms"  type="#4"/>
+			<attribute name="prenoms" type="#10">
+				<value>"les copains"</value>
+				<value>"easy"</value>
+			</attribute>
+			<attribute name="numeros" type="#11"/>
+			
 		</entity>
 
 		<entity id="Coucou" parent="Balise">
 			<listdef id="#5" type="String"/>
 			<attribute name="Nom" type="String"/>
-			<attribute name="Numero" type="int"/>
+			<attribute name="Numero" type="int">
+				<value>5</value>
+			</attribute>				
 			<attribute name="mesStrings" type="#5"/>
 		</entity>
 	</model>

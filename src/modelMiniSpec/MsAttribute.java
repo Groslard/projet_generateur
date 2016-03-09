@@ -1,5 +1,7 @@
 package modelMiniSpec;
 
+import java.util.ArrayList;
+
 import generator.JavaVisitor;
 
 public class MsAttribute implements UnresolveObject {
@@ -7,9 +9,12 @@ public class MsAttribute implements UnresolveObject {
 	MsType type;
 	MsEntity entity;
 	
+	ArrayList<String> initialValues;
+	
 	public MsAttribute(String name,MsEntity parentEntity){
 		this.name = name;
 		this.entity=parentEntity;
+		this.initialValues = new ArrayList<String>();
 	}
 
 	public MsEntity getParentEntity() {
@@ -36,6 +41,14 @@ public class MsAttribute implements UnresolveObject {
 		this.type = type;
 	}
 	
+	public ArrayList<String> getInitialValues() {
+		return initialValues;
+	}
+
+	public void setInitialValues(ArrayList<String> initialValues) {
+		this.initialValues = initialValues;
+	}
+
 	@Override
 	public String toString() {
 		return "\n\tMjAttribute [name=" + name + ", type=" + type + "]";
