@@ -1,6 +1,8 @@
 package modelMiniSpec;
 
+import generator.JavaTypeNameVisitor;
 import generator.JavaVisitor;
+import generator.Visitor;
 
 public class MsArray extends MsCollection {
 
@@ -15,7 +17,7 @@ public class MsArray extends MsCollection {
 		return "MsArray [type=" + type + ", size=" + max + "]";
 	}
 	
-	 public void accept(JavaVisitor visitor){
+	 public void accept(Visitor visitor){
 		 visitor.visit(this);
 	 }
 

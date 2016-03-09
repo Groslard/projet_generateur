@@ -13,20 +13,25 @@ import java.util.logging.Logger;
 
 import modelMiniSpec.MsArray;
 import modelMiniSpec.MsAttribute;
+import modelMiniSpec.MsCollection;
 import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
 import modelMiniSpec.MsReference;
 import modelMiniSpec.MsSet;
+import modelMiniSpec.MsType;
 import modelParameter.PrmConfig;
 
 public class JavaVisitor extends LangageVisitor {
 
+	JavaTypeNameVisitor typeNameVisitor;
+	MsAttribute currentAttribute;
 	/** CONSTRUCTOR **/
 	public JavaVisitor(MsModel mdl, PrmConfig conf) {
 		super();
 		this.conf = conf;
 		this.mdl = mdl;
+		this.typeNameVisitor = new JavaTypeNameVisitor();
 	}
 
 	/** VISIT METHODS **/
@@ -34,14 +39,14 @@ public class JavaVisitor extends LangageVisitor {
 	public void visit(MsModel o) {
 		File dir;
 		// creation du package sous forme de dossier
-		String packageDir =conf.getPackageReference(o.getName());
-		if(packageDir!=null){
-			 dir = new File("src/" + packageDir);
-			 mdl.setName(packageDir);
-		}else{
-			 dir = new File("src/" + o.getName());
+		String packageDir = conf.getPackageReference(o.getName());
+		if (packageDir != null) {
+			dir = new File("src/" + packageDir);
+			mdl.setName(packageDir);
+		} else {
+			dir = new File("src/" + o.getName());
 		}
-		
+
 		dir.mkdir();
 		// parcours des entities du package
 		for (MsEntity entitie : o.getEntities()) {
@@ -50,14 +55,15 @@ public class JavaVisitor extends LangageVisitor {
 			footer = "\n }";
 			declarationBloc = "";
 			methodBloc = "";
-			entityImports = new HashSet<>();
+			collectionMethod = "";
 			// initialisation des generatedName pour tous les type des attribut
 			// de msentity
 
 			entitie.accept(this);
 
 			// on stocke la premiere class dans la has map
-			listeclass.put(entitie.getName(), importBlock + header + declarationBloc + methodBloc + footer);
+			listeclass.put(entitie.getName(),
+					importBlock + header + declarationBloc + methodBloc + collectionMethod + footer);
 		}
 	}
 
@@ -68,9 +74,9 @@ public class JavaVisitor extends LangageVisitor {
 
 		importBlock += "package " + mdl.getName() + "; \n\n";
 		if (o.getParent() != null) {
-			this.lastVisitedTypeName = "";
 			o.getParent().accept(this);
-			header += "public class " + o.getName() + " extends " + this.lastVisitedTypeName + " { \n\n";
+			o.getParent().accept(typeNameVisitor);
+			header += "public class " + o.getName() + " extends " + typeNameVisitor.getResult() + " { \n\n";
 			methodBloc += "\tpublic " + o.getName() + "(){\n\t super();\n\t} \n\n";
 		} else {
 			header += "public class " + o.getName() + " { \n\n";
@@ -82,7 +88,6 @@ public class JavaVisitor extends LangageVisitor {
 		}
 		declarationBloc += "\n";
 
-		entityImports.remove(null);
 		for (String path : importPath)
 			importBlock += "import " + path + ";\n";
 
@@ -91,64 +96,95 @@ public class JavaVisitor extends LangageVisitor {
 
 	@Override
 	public void visit(MsAttribute o) {
-		this.lastVisitedTypeName = "";
-
+		currentAttribute=o;
 		o.getType().accept(this);
-
-		// faire un o.type.accept(self) et des visit pour mjtype en stockant la
-		// decla
-		declarationBloc += "\tprivate " + lastVisitedTypeName + " " + (o.getName()).toLowerCase() + "; \n";
-		methodBloc += getSetter(o);
-		methodBloc += getGetter(o);
-
+		o.getType().accept(typeNameVisitor);
+		declarationBloc += "\tprivate " + typeNameVisitor.getResult() + " " + (o.getName()).toLowerCase() + "; \n";
+		
+		// On passe le type de facon à typer l'appel de method pour bien aiguiller la construction des méthodes (pour savoir si collection ou reference)
+		//methodBloc += buildMethods(o, o.getType());
+		methodBloc+=getSetter(o);
+		methodBloc+=getGetter(o);
+		currentAttribute=null;
 	}
+
+	
 
 	@Override
 	public void visit(MsList list) {
-
-		// entityImports.add(list.getImportPath());
-		lastVisitedTypeName += "ArrayList<";
 		list.getType().accept(this);
-		lastVisitedTypeName += ">";
 		this.importPath.add(conf.getImportReference("list"));
+		if(currentAttribute!=null){
+			collectionMethod += getAddToList(list);
+			collectionMethod += getRemoveFromList(list);
+		}
+		
 	}
 
 	@Override
 	public void visit(MsReference ref) {
 
-		lastVisitedTypeName += ref.getTypeName();
-		String model=conf.getImportReference(ref.getTypeName());
-		MsModel msModel=ref.getEntity().getModel();
-		if ( conf.getImportReference(ref.getTypeName())!= null) {
+		String model = conf.getImportReference(ref.getTypeName());
+		MsModel msModel = ref.getEntity().getModel();
+		if (conf.getImportReference(ref.getTypeName()) != null) {
 			this.importPath.add(model);
-		}else if (msModel!=null){
-			//teste si la classe est a l'exterieur du package
-			if(!msModel.getName().equals(mdl.getName())){
-				this.importPath.add(msModel.getName()+"."+ref.getTypeName());
+		} else if (msModel != null) {
+			// teste si la classe est a l'exterieur du package
+			if (!msModel.getName().equals(mdl.getName())) {
+				this.importPath.add(msModel.getName() + "." + ref.getTypeName());
 			}
-			
 		}
 
+	}
+
+	/** ADD/REMOVE LIST **/
+	private String getAddToList(MsList o) {
+		String add = "";
+		add += "\tpublic void add" +currentAttribute.getName().substring(0, 1).toUpperCase() + currentAttribute.getName().substring(1) + "("
+				+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()<"+o.getMax()
+						+ ")\n\t\tthis."+ currentAttribute.getName().toLowerCase() + ".add(" + o.getType().getTypeName().toLowerCase() + ");\n\t}\n\n";
+		return add;
+	}
+
+	private String getRemoveFromList(MsList o) {
+		String remove = "";
+		remove += "\tpublic void  remove" + currentAttribute.getName().substring(0, 1).toUpperCase()
+				+ currentAttribute.getName().substring(1) + "("+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() 
+				+"){\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()>"+o.getMin()
+				+ ")\n\t\t this." +currentAttribute.getName().toLowerCase()+".remove(" +o.getType().getTypeName().toLowerCase()  +");\n\t}\n\n";
+		return remove;
 	}
 
 	/** GETTERS/SETTER BUILDER **/
 	private String getSetter(MsAttribute o) {
 		String setter = "";
+		o.getType().accept(typeNameVisitor);
 		setter += "\tpublic void set" + o.getName().substring(0, 1).toUpperCase() + o.getName().substring(1) + "("
-				+ lastVisitedTypeName + " " + o.getName().toLowerCase() + "){\n\t\tthis." + o.getName().toLowerCase()
+				+ typeNameVisitor.getResult() + " " + o.getName().toLowerCase() + "){\n\t\tthis." + o.getName().toLowerCase()
 				+ "=" + o.getName().toLowerCase() + ";\n\t}\n\n";
 		return setter;
 	}
 
 	private String getGetter(MsAttribute o) {
 		String getter = "";
-		getter += "\tpublic " + lastVisitedTypeName + " get" + o.getName().substring(0, 1).toUpperCase()
+		o.getType().accept(typeNameVisitor);
+		getter += "\tpublic " + typeNameVisitor.getResult() + " get" + o.getName().substring(0, 1).toUpperCase()
 				+ o.getName().substring(1) + "(){\n\t\treturn " + o.getName().toLowerCase() + ";\n\t}\n\n";
 		return getter;
 	}
 
+	
+	public void visit(MsSet msSet) {
+		// TODO Auto-generated method stub
 
+	}
 
+	public void visit(MsArray msArray) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	
 	/** GENERATION METHOD **/
 	public void generate() {
 		/** Build source code **/
@@ -163,11 +199,11 @@ public class JavaVisitor extends LangageVisitor {
 
 			try {
 				File file;
-				String packageDir =conf.getPackageReference( mdl.getName());
-				if(packageDir!=null){
-					System.out.println("src/" + packageDir+ "/" + cle + ".java");
-					file = new File("src/" + packageDir+ "/" + cle + ".java");
-				}else{
+				String packageDir = conf.getPackageReference(mdl.getName());
+				if (packageDir != null) {
+					System.out.println("src/" + packageDir + "/" + cle + ".java");
+					file = new File("src/" + packageDir + "/" + cle + ".java");
+				} else {
 					file = new File("src/" + mdl.getName() + "/" + cle + ".java");
 				}
 				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
@@ -183,17 +219,6 @@ public class JavaVisitor extends LangageVisitor {
 		}
 
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Files Generated");
-	}
-
-
-	public void visit(MsSet msSet) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void visit(MsArray msArray) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

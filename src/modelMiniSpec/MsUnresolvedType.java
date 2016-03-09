@@ -1,6 +1,8 @@
 package modelMiniSpec;
 
+import generator.JavaTypeNameVisitor;
 import generator.JavaVisitor;
+import generator.Visitor;
 
 public class MsUnresolvedType extends MsType {
 	protected String id;
@@ -28,10 +30,12 @@ public class MsUnresolvedType extends MsType {
 	}
 
 	@Override
-	public void accept(JavaVisitor javaVisitor) {
+	public void accept(Visitor visitor) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 	
 	
 }

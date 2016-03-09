@@ -1,6 +1,8 @@
 package modelMiniSpec;
 
+import generator.JavaTypeNameVisitor;
 import generator.JavaVisitor;
+import generator.Visitor;
 
 public class MsReference extends MsType {
 	MsEntity entity;
@@ -32,6 +34,13 @@ public class MsReference extends MsType {
 	public String getTypeName() {
 		// TODO Auto-generated method stub
 		return this.entity.getName();
+	}
+
+
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+		
 	}
 	 
 }

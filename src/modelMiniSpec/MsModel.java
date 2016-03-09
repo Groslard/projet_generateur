@@ -1,6 +1,7 @@
 package modelMiniSpec;
 
 import generator.JavaVisitor;
+import generator.Visitor;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class MsModel {
 		return res;
 	}
 	
-	 public void accept(JavaVisitor visitor){
+	 public void accept(Visitor visitor){
 		 visitor.visit(this);
 	 }
 }

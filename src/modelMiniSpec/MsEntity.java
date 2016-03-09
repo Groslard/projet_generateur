@@ -1,6 +1,7 @@
 package modelMiniSpec;
 
 import generator.JavaVisitor;
+import generator.Visitor;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class MsEntity implements UnresolveObject{
 		return "MjEntity [name=" + name + ", attributes=" + attributes + "]";
 	}
 	
-	 public void accept(JavaVisitor visitor){
+	 public void accept(Visitor visitor){
 		 visitor.visit(this);
 		 
 	 }

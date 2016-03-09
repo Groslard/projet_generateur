@@ -8,9 +8,10 @@ import modelMiniSpec.MsEntity;
 import modelMiniSpec.MsList;
 import modelMiniSpec.MsModel;
 import modelMiniSpec.MsReference;
+import modelMiniSpec.MsType;
 import modelParameter.PrmConfig;
 
-public abstract class LangageVisitor {
+public abstract class LangageVisitor extends Visitor {
 	
 	/** Different part of export file **/
 	String importBlock;
@@ -18,8 +19,7 @@ public abstract class LangageVisitor {
 	String declarationBloc;
 	String methodBloc;
 	String footer;
-	
-	String lastVisitedTypeName;
+	String collectionMethod;
 
 	/** List of already generated class with source code **/
 	HashMap<String, String> listeclass = new HashMap<>();
@@ -27,18 +27,10 @@ public abstract class LangageVisitor {
 	/**list of import path**/
 	Set<String> importPath;
 	
-	/** List of imports needed for current building class **/
-	HashSet<String> entityImports;
-	
 	/** Model to generate **/
 	MsModel mdl;
 	
 	/** user configuration parsed **/
 	PrmConfig conf;
-	
-	public abstract void visit(MsModel o);
-	public abstract void visit(MsEntity o);
-	public abstract void visit(MsAttribute o);
-	public abstract void visit(MsList list);
-	public abstract void visit(MsReference ref);
+
 }

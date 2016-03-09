@@ -1,6 +1,8 @@
 package modelMiniSpec;
 
+import generator.JavaTypeNameVisitor;
 import generator.JavaVisitor;
+import generator.Visitor;
 
 public class MsList extends MsCollection {
 
@@ -21,13 +23,15 @@ public class MsList extends MsCollection {
 		return "MsList [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 	
-	 public void accept(JavaVisitor visitor){
+	 public void accept(Visitor visitor){
 		 visitor.visit(this);
 	 }
-
+	 
 	@Override
 	public String getTypeName() {
 		// TODO Auto-generated method stub
 		return "list";
 	}
+
+
 }
