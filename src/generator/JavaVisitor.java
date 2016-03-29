@@ -31,7 +31,7 @@ public class JavaVisitor extends LangageVisitor {
 		super();
 		this.conf = conf;
 		this.mdl = mdl;
-		this.typeNameVisitor = new JavaTypeNameVisitor();
+		this.typeNameVisitor = new JavaTypeNameVisitor(conf);
 	}
 
 	/** VISIT METHODS **/

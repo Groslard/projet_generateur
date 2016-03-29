@@ -34,12 +34,12 @@ public class PrmConfig {
 		this.languageType = languageType;
 	}
 
-	public PrmParameter getParameterModel(String clefRecherche) {
+	public PrmModel getParameterModel(String clefRecherche) {
 
 		return paramsModel.get(clefRecherche);
 	}
 
-	public PrmParameter getParameterPrimitif(String clefRecherche) {
+	public PrmPrimitif getParameterPrimitif(String clefRecherche) {
 
 		return paramsPrimitif.get(clefRecherche);
 	}

@@ -23,8 +23,6 @@ public class MsSet extends MsCollection {
 		return "MsSet [type=" + type + ", min=" + min + ", max=" + max + "]";
 	}
 	
-	 
-
 	@Override
 	public String getTypeName() {
 		// TODO Auto-generated method stub
