@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -52,6 +54,7 @@ public class MiniSpecParser {
 		try {
 			final DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(new File(xmlPath));
+
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -75,6 +78,7 @@ public class MiniSpecParser {
 		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
 		this.resolveTypes();
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
+		verifHeritage();
 		return mdl;
 	}
 
@@ -146,7 +150,7 @@ public class MiniSpecParser {
 		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
 		this.unresolvedObjects.add(attribute);
-		
+
 		NodeList nl = attributeNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -157,7 +161,7 @@ public class MiniSpecParser {
 				attribute.getInitialValues().add(val);
 			}
 		}
-		
+
 		return attribute;
 	}
 
@@ -192,6 +196,46 @@ public class MiniSpecParser {
 
 		this.typesDef.put(typeDefNode.getAttribute("id"), collection);
 		this.unresolvedObjects.add(collection);
+	}
+
+	private void verifHeritage() throws Exception {
+		System.out.println("on appel verif heritage");
+		Set cles = this.entities.keySet();
+		Iterator it = cles.iterator();
+		while (it.hasNext()) {
+			Object cle = it.next();
+
+			MsEntity valeur = this.entities.get(cle);
+			// si l'entitée herite d'une autre entitée
+			MsType parent = valeur.getParent();
+			if (parent != null) {
+				// gestion heritage circulaire
+				MsEntity parentEntity = this.entities.get(parent.getTypeName());
+				if (parentEntity != null) {
+					MsType typeParent = parentEntity.getParent();
+					if (typeParent != null) {
+						String parentTypeName = typeParent.getTypeName();
+						if (parentTypeName != null) {
+							if (parentTypeName.equals(cle)) {
+
+								throw new Exception("Circularity Error : double héritage entre " + parentTypeName
+										+ " et " + parent.getTypeName());
+							}
+						}
+					}
+				}
+
+				// gestion definition
+				for (MsAttribute attrib : valeur.getAttributes()) {
+					for (MsAttribute attrib2 : parentEntity.getAttributes()) {
+						if(attrib.getName().equals(attrib2.getName())){
+							throw new Exception("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+valeur.getName()+" et "+parentEntity.getName());
+						}
+					}
+
+				}
+			}
+		}
 	}
 
 	private void resolveTypes() {
