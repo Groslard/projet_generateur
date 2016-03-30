@@ -106,20 +106,7 @@ public class PrmConfig {
 		return retour;
 	}
 	
-	public boolean getPrimitifparam(String idRecherche) {
-		boolean retour=false;
-	
-		if(paramsPrimitif.get(idRecherche)!=null){
-			return paramsPrimitif.get(idRecherche).isPrimitif();
-		}
-		
-		if(paramsModel.get(paramsModel)!=null){
-			return paramsModel.get(idRecherche).isPrimitif();
-		}
 
-
-		return retour;
-	}
 	
 	
 	
@@ -135,4 +122,30 @@ public class PrmConfig {
 		return retour;
 	}
 
+	public boolean getParameterModelv2(String clefRecherche) {
+	
+		return 	paramsModel.containsKey(clefRecherche);
+	}
+
+	public boolean getParameterPrimitifv2(String clefRecherche) {
+
+		return 	paramsPrimitif.containsKey(clefRecherche);
+	}
+	public boolean getPrimitifparam(String idRecherche) {
+		boolean retour=false;
+	
+		if(getParameterPrimitifv2(idRecherche)){
+			return getParameterPrimitif(idRecherche).isPrimitif();
+		}
+		
+		if(getParameterModelv2(idRecherche)){
+			return getParameterModel(idRecherche).isPrimitif();
+		}
+
+
+		return retour;
+	}
+	
+
+	
 }

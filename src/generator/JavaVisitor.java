@@ -57,6 +57,7 @@ public class JavaVisitor extends LangageVisitor {
 			constructeurBLoc="";
 			methodBloc = "";
 			collectionMethod = "";
+			unImplementMethod="";
 			// initialisation des generatedName pour tous les type des attribut
 			// de msentity
 
@@ -64,7 +65,7 @@ public class JavaVisitor extends LangageVisitor {
 			constructeurBLoc+="\n\t} \n\n";
 			// on stocke la premiere class dans la has map
 			listeclass.put(entitie.getName(),
-					importBlock + header +constructeurBLoc+ declarationBloc + methodBloc + collectionMethod + footer);
+					importBlock + header +constructeurBLoc+ declarationBloc + methodBloc + collectionMethod +unImplementMethod + footer);
 		}
 	}
 
@@ -97,12 +98,26 @@ public class JavaVisitor extends LangageVisitor {
 
 	@Override
 	public void visit(MsAttribute o) {
+		
+		System.out.println("nom attribut "+o.getName()+" constructor attribut:"+o.isConstructor()+ " method"+o.getMethod());
 		currentAttribute=o;
 		o.getType().accept(this);
 		o.getType().accept(typeNameVisitor);
 		declarationBloc += "\tprivate " + typeNameVisitor.getResult() + " " + (o.getName()).toLowerCase() + "; \n";
-		if(o.getInitialValue()!=null){
+		if(conf.getPrimitifparam(o.getType().getTypeName())&&o.getInitialValue()!=null){
 			constructeurBLoc+="\n \t this."+o.getName().toLowerCase()+"="+o.getInitialValue()+";\n";
+			System.out.println("primitive");
+		}else if(o.getMethod()!=null&&!o.getMethod().isEmpty()) {
+			System.out.println("method");
+			//faire la construction de la methode si elle n'existe pas
+			o.getType().accept(typeNameVisitor);
+			constructeurBLoc+="\n \t this."+o.getName().toLowerCase()+"="+o.getMethod()+"();\n";
+			unImplementMethod+="\t public "+typeNameVisitor.getResult()+" " +o.getMethod()+"(){\n\t return null;\n}";
+		}else if (!conf.getPrimitifparam(o.getType().getTypeName())&&o.isConstructor()){
+			System.out.println("here");
+			o.getType().accept(typeNameVisitor);
+			constructeurBLoc+="\n \t this."+o.getName().toLowerCase()+"= new "+typeNameVisitor.getResult()+"();\n";
+			
 		}
 		
 		// On passe le type de facon à typer l'appel de method pour bien aiguiller la construction des méthodes (pour savoir si collection ou reference)

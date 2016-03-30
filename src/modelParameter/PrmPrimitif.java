@@ -11,5 +11,12 @@ public class PrmPrimitif extends PrmParameter {
 		this.type = type;
 	}
 	
-	
+	public boolean isPrimitif() {
+		return primitif;
+	}
+
+	public void setPrimitif(boolean primitif) {
+		this.primitif = primitif;
+	}
+
 }

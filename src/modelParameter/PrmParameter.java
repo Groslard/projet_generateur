@@ -5,6 +5,7 @@ public class PrmParameter {
 	String pkg;
 	boolean primitif;
 	
+	
 	public String getName() {
 		return name;
 	}
@@ -18,12 +19,6 @@ public class PrmParameter {
 		this.pkg = pkg;
 	}
 	
-	public boolean isPrimitif() {
-		return primitif;
-	}
 
-	public void setPrimitif(boolean primitif) {
-		this.primitif = primitif;
-	}
 	
 }

@@ -17,7 +17,7 @@
 		</entity>
 
 		<entity id="Coucou" parent="Balise">
-			<listdef id="#5" type="String" min="1" max="7"/>
+			<listdef  id="#5" type="String" min="1" max="7"/>
 			<attribute name="Nom" type="String"/>
 			<attribute name="Numero" type="int"/>
 			<attribute name="balise" type="Balise"/>				

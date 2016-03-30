@@ -154,10 +154,34 @@ public class MiniSpecParser {
 
 	public MsAttribute readAttributeNode(Element attributeNode) {
 		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"), currentEntity);
+		
+		//gestion constructor method
+		if (attributeNode.getAttribute("constructor")!=null) {
+			String val = attributeNode.getAttribute("constructor");
+			if(val.equals("true")){
+				attribute.setConstructor(true);
+			}else{
+				attribute.setConstructor(false);
+			}
+			
+		}else{
+			attribute.setConstructor(false);
+		}
+		if (attributeNode.getAttribute("method")!=null) {
+			String val = attributeNode.getAttribute("method");
+			attribute.setMethod(val);
+		}else{
+			attribute.setMethod(null);
+		}
+		
+		
 		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
 		this.unresolvedObjects.add(attribute);
 
+		
+		
+		
 		NodeList nl = attributeNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -167,6 +191,7 @@ public class MiniSpecParser {
 				String val = childNode.getTextContent();
 				attribute.setInitialValue(val);
 			}
+			
 		}
 
 		return attribute;

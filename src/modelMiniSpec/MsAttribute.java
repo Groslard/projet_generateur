@@ -8,7 +8,8 @@ public class MsAttribute implements UnresolveObject {
 	String name;
 	MsType type;
 	MsEntity entity;
-	
+	boolean isConstructor;
+	String method;
 	String initialValue;
 	
 	public MsAttribute(String name,MsEntity parentEntity){
@@ -41,6 +42,21 @@ public class MsAttribute implements UnresolveObject {
 		this.type = type;
 	}
 	
+	public boolean isConstructor() {
+		return isConstructor;
+	}
+
+	public void setConstructor(boolean isConstructor) {
+		this.isConstructor = isConstructor;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
 
 
 	public String getInitialValue() {
