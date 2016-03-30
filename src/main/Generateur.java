@@ -6,7 +6,7 @@ import generator.JavaVisitor;
 import parser.MiniSpecParser;
 import parser.ParamParser;
 
-public class testGeneration {
+public class Generateur {
 
 	public static void main(String[] args) throws Exception {
 		ParamParser paramParser= new ParamParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\imports.xml");
