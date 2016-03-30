@@ -10,7 +10,7 @@ public class Generateur {
 
 	static String xmlDirectory = "C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\";
 	
-	static String minispecXML = "Test_4_Valeur_Initiale.xml";
+	static String minispecXML = "Test_2_Association.xml";
 	static String configXML = "imports.xml";
 	
 	public static void main(String[] args) throws Exception {
