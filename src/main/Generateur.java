@@ -8,14 +8,22 @@ import parser.ParamParser;
 
 public class Generateur {
 
+	static String xmlDirectory = "C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\";
+	
+	static String minispecXML = "entity.xml";
+	static String configXML = "imports.xml";
+	
 	public static void main(String[] args) throws Exception {
-		ParamParser paramParser= new ParamParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\imports.xml");
+		/** On commence par parser le fichier de config **/
+		ParamParser paramParser= new ParamParser(xmlDirectory + configXML);
 		PrmConfig prmConfig =paramParser.getMetaInstance();
 		
-		MiniSpecParser parser = new MiniSpecParser("C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\entity.xml");
+		/** Puis on parse le xml de minispec **/
+		MiniSpecParser parser = new MiniSpecParser(xmlDirectory + minispecXML );
 		parser.setPrimitives(prmConfig.getPrimitivesNames());
 		MsModel pkg = parser.getMetaInstance();
 
+		/** Une fois parsé, on génère les classe java correspondantes **/
 		JavaVisitor visitgenerer= new JavaVisitor(pkg,prmConfig);
 		visitgenerer.generate();
 	}
