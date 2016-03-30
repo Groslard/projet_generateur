@@ -78,7 +78,14 @@ public class MiniSpecParser {
 		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
 		this.resolveTypes();
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
-		verifHeritage();
+		Set cles = this.entities.keySet();
+		Iterator it = cles.iterator();
+		while (it.hasNext()) {
+			Object cle = it.next();
+
+		MsEntity valeur = this.entities.get(cle);
+		verifHeritage(valeur);
+		}
 		return mdl;
 	}
 
@@ -158,7 +165,7 @@ public class MiniSpecParser {
 				continue;
 			if (childNode.getNodeName() == "value") {
 				String val = childNode.getTextContent();
-				attribute.getInitialValues().add(val);
+				attribute.setInitialValue(val);
 			}
 		}
 
@@ -198,16 +205,54 @@ public class MiniSpecParser {
 		this.unresolvedObjects.add(collection);
 	}
 
+	
+	private void verifHeritage(MsEntity entities){
+		
+		MsType parent = entities.getParent();
+		if (parent != null) {
+			// gestion heritage circulaire
+			MsEntity parentEntity = this.entities.get(parent.getTypeName());
+			if (parentEntity != null) {
+				MsType typeParent = parentEntity.getParent();
+				if (typeParent != null) {
+					String parentTypeName = typeParent.getTypeName();
+					if (parentTypeName != null) {
+						if (parentTypeName.equals(entities.getName())) {
+							parentEntity.setParent(null);
+							System.out.println("Circularity Error : double héritage entre " + parentTypeName
+									+ " et " + parent.getTypeName());
+						}
+					}
+				}
+			}
+
+			// gestion definition multiple
+			
+			for (MsAttribute attrib : entities.getAttributes()) {
+				MsAttribute attribDelete=null;
+				for (MsAttribute attrib2 : parentEntity.getAttributes()) {
+					if(attrib.getName().equals(attrib2.getName())){
+						attribDelete=attrib2;
+						System.out.println("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+entities.getName()+" et "+parentEntity.getName());
+						
+					}
+				}if(attribDelete!=null){
+				parentEntity.getAttributes().remove(attribDelete);
+				}
+			}
+			verifHeritage(parentEntity);	
+		}
+	}
+	
 	private void verifHeritage() throws Exception {
-		System.out.println("on appel verif heritage");
 		Set cles = this.entities.keySet();
 		Iterator it = cles.iterator();
 		while (it.hasNext()) {
 			Object cle = it.next();
 
-			MsEntity valeur = this.entities.get(cle);
+			MsEntity fils = this.entities.get(cle);
 			// si l'entitée herite d'une autre entitée
-			MsType parent = valeur.getParent();
+			MsType parent = fils.getParent();
 			if (parent != null) {
 				// gestion heritage circulaire
 				MsEntity parentEntity = this.entities.get(parent.getTypeName());
@@ -217,23 +262,29 @@ public class MiniSpecParser {
 						String parentTypeName = typeParent.getTypeName();
 						if (parentTypeName != null) {
 							if (parentTypeName.equals(cle)) {
-
-								throw new Exception("Circularity Error : double héritage entre " + parentTypeName
+								parentEntity.setParent(null);
+								System.out.println("Circularity Error : double héritage entre " + parentTypeName
 										+ " et " + parent.getTypeName());
 							}
 						}
 					}
 				}
 
-				// gestion definition
-				for (MsAttribute attrib : valeur.getAttributes()) {
+				// gestion definition multiple
+				
+				for (MsAttribute attrib : fils.getAttributes()) {
+					MsAttribute attribDelete=null;
 					for (MsAttribute attrib2 : parentEntity.getAttributes()) {
 						if(attrib.getName().equals(attrib2.getName())){
-							throw new Exception("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+valeur.getName()+" et "+parentEntity.getName());
+							attribDelete=attrib2;
+							System.out.println("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+fils.getName()+" et "+parentEntity.getName());
+							
 						}
+					}if(attribDelete!=null){
+					parentEntity.getAttributes().remove(attribDelete);
 					}
-
 				}
+					
 			}
 		}
 	}

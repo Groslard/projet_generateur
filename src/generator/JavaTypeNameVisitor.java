@@ -58,7 +58,10 @@ public class JavaTypeNameVisitor extends Visitor{
 	@Override
 	public void visit(MsEntity o) {}
 	@Override
-	public void visit(MsAttribute o) {}
+	public void visit(MsAttribute o) {
+		
+		
+	}
 	
 
 	

@@ -9,12 +9,12 @@ public class MsAttribute implements UnresolveObject {
 	MsType type;
 	MsEntity entity;
 	
-	ArrayList<String> initialValues;
+	String initialValue;
 	
 	public MsAttribute(String name,MsEntity parentEntity){
 		this.name = name;
 		this.entity=parentEntity;
-		this.initialValues = new ArrayList<String>();
+		this.initialValue =null;
 	}
 
 	public MsEntity getParentEntity() {
@@ -41,12 +41,14 @@ public class MsAttribute implements UnresolveObject {
 		this.type = type;
 	}
 	
-	public ArrayList<String> getInitialValues() {
-		return initialValues;
+
+
+	public String getInitialValue() {
+		return initialValue;
 	}
 
-	public void setInitialValues(ArrayList<String> initialValues) {
-		this.initialValues = initialValues;
+	public void setInitialValue(String initialValue) {
+		this.initialValue = initialValue;
 	}
 
 	@Override

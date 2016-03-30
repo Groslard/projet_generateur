@@ -109,6 +109,12 @@ public class ParamParser {
 		if (!nomPackage.isEmpty() && nomPackage != null) {
 			primitif.setType(type);
 		}
+		String boolPrimitif = entityNode.getAttribute("primitif");
+		if (boolPrimitif.equals("true")) {
+			primitif.setPrimitif(true);
+		}else{
+			primitif.setPrimitif(false);
+		}
 		
 		return primitif;
 	}

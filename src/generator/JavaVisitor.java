@@ -54,16 +54,17 @@ public class JavaVisitor extends LangageVisitor {
 			header = "";
 			footer = "\n }";
 			declarationBloc = "";
+			constructeurBLoc="";
 			methodBloc = "";
 			collectionMethod = "";
 			// initialisation des generatedName pour tous les type des attribut
 			// de msentity
 
 			entitie.accept(this);
-
+			constructeurBLoc+="\n\t} \n\n";
 			// on stocke la premiere class dans la has map
 			listeclass.put(entitie.getName(),
-					importBlock + header + declarationBloc + methodBloc + collectionMethod + footer);
+					importBlock + header +constructeurBLoc+ declarationBloc + methodBloc + collectionMethod + footer);
 		}
 	}
 
@@ -77,10 +78,10 @@ public class JavaVisitor extends LangageVisitor {
 			o.getParent().accept(this);
 			o.getParent().accept(typeNameVisitor);
 			header += "public class " + o.getName() + " extends " + typeNameVisitor.getResult() + " { \n\n";
-			methodBloc += "\tpublic " + o.getName() + "(){\n\t super();\n\t} \n\n";
+			constructeurBLoc += "\tpublic " + o.getName() + "(){\n\t super();";
 		} else {
 			header += "public class " + o.getName() + " { \n\n";
-			methodBloc += "\tpublic " + o.getName() + "(){} \n\n";
+			constructeurBLoc += "\tpublic " + o.getName() + "(){";
 		}
 
 		for (MsAttribute attrib : o.getAttributes()) {
@@ -100,6 +101,9 @@ public class JavaVisitor extends LangageVisitor {
 		o.getType().accept(this);
 		o.getType().accept(typeNameVisitor);
 		declarationBloc += "\tprivate " + typeNameVisitor.getResult() + " " + (o.getName()).toLowerCase() + "; \n";
+		if(o.getInitialValue()!=null){
+			constructeurBLoc+="\n \t this."+o.getName().toLowerCase()+"="+o.getInitialValue()+";\n";
+		}
 		
 		// On passe le type de facon à typer l'appel de method pour bien aiguiller la construction des méthodes (pour savoir si collection ou reference)
 		//methodBloc += buildMethods(o, o.getType());
@@ -125,7 +129,11 @@ public class JavaVisitor extends LangageVisitor {
 
 	@Override
 	public void visit(MsList list) {
-		list.getType().accept(this);
+		
+		if(!(list.getType()instanceof MsCollection)){
+			list.getType().accept(this);
+		}
+		
 		this.importPath.add(conf.getImportReference("list"));
 		if(currentAttribute!=null){
 			collectionMethod += getAddToList(list);
@@ -134,7 +142,11 @@ public class JavaVisitor extends LangageVisitor {
 	}
 	
 	public void visit(MsSet msSet) {
-		msSet.getType().accept(this);
+		
+		if(!(msSet.getType()instanceof MsCollection)){
+			msSet.getType().accept(this);
+		}
+		
 		this.importPath.add(conf.getImportReference("set"));
 		if(currentAttribute!=null){
 			collectionMethod += getAddToList(msSet);
@@ -144,13 +156,19 @@ public class JavaVisitor extends LangageVisitor {
 	
 	public void visit(MsArray msArray) {
 		msArray.getType().accept(this);
+		if(currentAttribute!=null){
+			collectionMethod += getAddToArray(msArray);
+		}
 	}
 
 	/** ADD/REMOVE LIST **/
 	private String getAddToList(MsCollection o) {
+		//ajouter gestion des listes enchaine
+		o.getType().accept(typeNameVisitor);
+		String chaineNom=typeNameVisitor.getResult();
 		String add = "";
 		add += "\tpublic void add" +currentAttribute.getName().substring(0, 1).toUpperCase() + currentAttribute.getName().substring(1) + "("
-				+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\t";		
+				+ chaineNom + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\t";		
 		if(o.getMax()>0)
 			add += "if("+currentAttribute.getName().toLowerCase()+".size()<"+o.getMax() + ")\n";
 		add += "\tthis."+ currentAttribute.getName().toLowerCase() + ".add(" + o.getType().getTypeName().toLowerCase() + ");\n\t}\n\n";
@@ -159,14 +177,34 @@ public class JavaVisitor extends LangageVisitor {
 
 	private String getRemoveFromList(MsCollection o) {
 		String remove = "";
+		o.getType().accept(typeNameVisitor);
+		String chaineNom=typeNameVisitor.getResult();
 		remove += "\tpublic void  remove" + currentAttribute.getName().substring(0, 1).toUpperCase()
-				+ currentAttribute.getName().substring(1) + "("+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() 
+				+ currentAttribute.getName().substring(1) + "("+ chaineNom + " " + o.getType().getTypeName().toLowerCase() 
 				+"){";
 		if(o.getMin()>0)
 			remove += "\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()>"+o.getMin() + ")";
 		remove += "\n\t\t this." +currentAttribute.getName().toLowerCase()+".remove(" +o.getType().getTypeName().toLowerCase()  +");\n\t}\n\n";
 		return remove;
 	}
+	
+	
+	
+	/** ADD/REMOVE ARRAY **/
+	
+	private String getAddToArray(MsArray o) {
+		//ajouter gestion des listes enchaine
+		String add = "";
+		o.getType().accept(typeNameVisitor);
+		String chaineNom=typeNameVisitor.getResult();
+		add += "\tpublic void add" +currentAttribute.getName().substring(0, 1).toUpperCase() + currentAttribute.getName().substring(1) + "(int index, "
+				+ chaineNom+ " val){\n\t\t";		
+		
+		add += "\tthis."+ currentAttribute.getName().toLowerCase() + "[index]=val;\n\t}\n\n";
+		return add;
+	}
+
+
 
 	/** GETTERS/SETTER BUILDER **/
 	private String getSetter(MsAttribute o) {

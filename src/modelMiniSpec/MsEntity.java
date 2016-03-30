@@ -55,6 +55,15 @@ public class MsEntity implements UnresolveObject{
 		this.attributes = attributes;
 	}
 
+
+	public boolean remove(MsAttribute arg0) {
+		return attributes.remove(arg0);
+	}
+
+	public boolean contains(Object o) {
+		return attributes.contains(o);
+	}
+
 	public MsType getParent() {
 		return parent;
 	}

@@ -106,6 +106,23 @@ public class PrmConfig {
 		return retour;
 	}
 	
+	public boolean getPrimitifparam(String idRecherche) {
+		boolean retour=false;
+	
+		if(paramsPrimitif.get(idRecherche)!=null){
+			return paramsPrimitif.get(idRecherche).isPrimitif();
+		}
+		
+		if(paramsModel.get(paramsModel)!=null){
+			return paramsModel.get(idRecherche).isPrimitif();
+		}
+
+
+		return retour;
+	}
+	
+	
+	
 	public String getPackageReference(String modelRechercher) {
 		String retour = null;
 	

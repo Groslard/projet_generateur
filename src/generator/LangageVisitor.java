@@ -15,7 +15,7 @@ public abstract class LangageVisitor extends Visitor {
 	String methodBloc;
 	String footer;
 	String collectionMethod;
-
+	String constructeurBLoc;
 	/** List of already generated class with source code **/
 	HashMap<String, String> listeclass = new HashMap<>();
 	

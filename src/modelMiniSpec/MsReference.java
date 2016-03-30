@@ -15,7 +15,7 @@ public class MsReference extends MsType {
 
 	@Override
 	public String toString() {
-		return "MjReference [entity="  + getTypeName() + "]";
+		return "MsReference [entity="  + getTypeName() + "]";
 	}
 	
 	 public void accept(JavaVisitor visitor){

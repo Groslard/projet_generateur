@@ -12,7 +12,7 @@ public class testGeneration {
 		ParamParser paramParser= new ParamParser("C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\imports.xml");
 		PrmConfig prmConfig =paramParser.getMetaInstance();
 		
-		MiniSpecParser parser = new MiniSpecParser("C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\entity.xml");
+		MiniSpecParser parser = new MiniSpecParser("C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\entityAssociation.xml");
 		parser.setPrimitives(prmConfig.getPrimitivesNames());
 		MsModel pkg = parser.getMetaInstance();
 
