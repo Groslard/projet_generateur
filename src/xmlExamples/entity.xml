@@ -21,6 +21,7 @@
 			<attribute name="Nom" type="String"/>
 			<attribute name="Numero" type="int"/>
 			<attribute name="balise" type="Balise"/>				
+
 			<attribute name="mesStrings" type="#5"/>
 		</entity>
 	</model>
