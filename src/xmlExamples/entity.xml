@@ -10,24 +10,17 @@
 
 		<entity id="Balise" parent="#2">
 			<listdef id="#4" type="String"/>		
-			<attribute name="monString" type="String">
-				<value>"coucou"</value>
-			</attribute>
+			<attribute name="monString" type="String"/>
 			<attribute name="noms"  type="#4"/>
-			<attribute name="prenoms" type="#10">
-				<value>"les copains"</value>
-				<value>"easy"</value>
-			</attribute>
+			<attribute name="prenoms" type="#10"/>
 			<attribute name="numeros" type="#11"/>
-			
 		</entity>
 
 		<entity id="Coucou" parent="Balise">
 			<listdef id="#5" type="String" min="1" max="7"/>
 			<attribute name="Nom" type="String"/>
-			<attribute name="Numero" type="int">
-				<value>5</value>
-			</attribute>				
+			<attribute name="Numero" type="int"/>
+			<attribute name="balise" type="Balise"/>				
 			<attribute name="mesStrings" type="#5"/>
 		</entity>
 	</model>

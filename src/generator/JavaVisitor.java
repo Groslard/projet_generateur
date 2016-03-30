@@ -108,18 +108,6 @@ public class JavaVisitor extends LangageVisitor {
 		currentAttribute=null;
 	}
 
-	
-
-	@Override
-	public void visit(MsList list) {
-		list.getType().accept(this);
-		this.importPath.add(conf.getImportReference("list"));
-		if(currentAttribute!=null){
-			collectionMethod += getAddToList(list);
-			collectionMethod += getRemoveFromList(list);
-		}
-	}
-
 	@Override
 	public void visit(MsReference ref) {
 
@@ -133,15 +121,39 @@ public class JavaVisitor extends LangageVisitor {
 				this.importPath.add(msModel.getName() + "." + ref.getTypeName());
 			}
 		}
+	}
 
+	@Override
+	public void visit(MsList list) {
+		list.getType().accept(this);
+		this.importPath.add(conf.getImportReference("list"));
+		if(currentAttribute!=null){
+			collectionMethod += getAddToList(list);
+			collectionMethod += getRemoveFromList(list);
+		}
+	}
+	
+	public void visit(MsSet msSet) {
+		msSet.getType().accept(this);
+		this.importPath.add(conf.getImportReference("set"));
+		if(currentAttribute!=null){
+			collectionMethod += getAddToList(msSet);
+			collectionMethod += getRemoveFromList(msSet);
+		}
+	}
+	
+	public void visit(MsArray msArray) {
+		msArray.getType().accept(this);
 	}
 
 	/** ADD/REMOVE LIST **/
 	private String getAddToList(MsCollection o) {
 		String add = "";
 		add += "\tpublic void add" +currentAttribute.getName().substring(0, 1).toUpperCase() + currentAttribute.getName().substring(1) + "("
-				+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()<"+o.getMax()
-						+ ")\n\t\tthis."+ currentAttribute.getName().toLowerCase() + ".add(" + o.getType().getTypeName().toLowerCase() + ");\n\t}\n\n";
+				+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() + "){\n\t\t";		
+		if(o.getMax()>0)
+			add += "if("+currentAttribute.getName().toLowerCase()+".size()<"+o.getMax() + ")\n";
+		add += "\tthis."+ currentAttribute.getName().toLowerCase() + ".add(" + o.getType().getTypeName().toLowerCase() + ");\n\t}\n\n";
 		return add;
 	}
 
@@ -149,8 +161,10 @@ public class JavaVisitor extends LangageVisitor {
 		String remove = "";
 		remove += "\tpublic void  remove" + currentAttribute.getName().substring(0, 1).toUpperCase()
 				+ currentAttribute.getName().substring(1) + "("+ o.getType().getTypeName() + " " + o.getType().getTypeName().toLowerCase() 
-				+"){\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()>"+o.getMin()
-				+ ")\n\t\t this." +currentAttribute.getName().toLowerCase()+".remove(" +o.getType().getTypeName().toLowerCase()  +");\n\t}\n\n";
+				+"){";
+		if(o.getMin()>0)
+			remove += "\n\t\tif("+currentAttribute.getName().toLowerCase()+".size()>"+o.getMin() + ")";
+		remove += "\n\t\t this." +currentAttribute.getName().toLowerCase()+".remove(" +o.getType().getTypeName().toLowerCase()  +");\n\t}\n\n";
 		return remove;
 	}
 
@@ -171,21 +185,6 @@ public class JavaVisitor extends LangageVisitor {
 				+ o.getName().substring(1) + "(){\n\t\treturn " + o.getName().toLowerCase() + ";\n\t}\n\n";
 		return getter;
 	}
-
-	
-	public void visit(MsSet msSet) {
-		msSet.getType().accept(this);
-		this.importPath.add(conf.getImportReference("set"));
-		if(currentAttribute!=null){
-			collectionMethod += getAddToList(msSet);
-			collectionMethod += getRemoveFromList(msSet);
-		}
-	}
-
-	public void visit(MsArray msArray) {
-		msArray.getType().accept(this);
-	}
-	
 	
 	/** GENERATION METHOD **/
 	public void generate() {
