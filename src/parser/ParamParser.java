@@ -21,20 +21,29 @@ import modelParameter.PrmModel;
 import modelParameter.PrmParameter;
 import modelParameter.PrmPrimitif;
 
+/**
+ * The Class ParamParser.
+ */
 public class ParamParser {
 
-	
+	/** The document. */
 	Document document;
+
+	/** The paramameters mapped by name */
 	HashMap<String, PrmParameter> params;
 
-	/** CONSTRUCTOR **/
+	/**
+	 * Parser constructor.
+	 *
+	 * @param xmlPath
+	 *            the xml path
+	 */
 	public ParamParser(String xmlPath) {
 		super();
 
 		params = new HashMap<String, PrmParameter>();
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-
+		final DocumentBuilderFactory factory = DocumentBuilderFactory
+				.newInstance();
 
 		document = null;
 		try {
@@ -44,8 +53,12 @@ public class ParamParser {
 			e.printStackTrace();
 		}
 	}
-	
-	/** EXPORT **/
+
+	/**
+	 * Generate an instance of paramconfig, which contains all parameters set in the config file.
+	 *
+	 * @return the meta instance
+	 */
 	public PrmConfig getMetaInstance() {
 		PrmConfig prmConfig = readPackageNode(document.getDocumentElement());
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "XML Read");
@@ -53,29 +66,43 @@ public class ParamParser {
 		return prmConfig;
 	}
 
-	/** READER METHODS **/
+	/**
+	 * Read package node.
+	 *
+	 * @param packageNode
+	 *            the package node
+	 * @return the instance of param config
+	 */
 	public PrmConfig readPackageNode(Element packageNode) {
 
-		PrmConfig prmConfig= new PrmConfig();
+		PrmConfig prmConfig = new PrmConfig();
 		prmConfig.setLanguageType(packageNode.getTagName());
-		
+
 		NodeList nl = packageNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
 			if (childNode.getNodeName() == "model") {
-				prmConfig.addparametersModel(readModelNode((Element) childNode));
+				prmConfig
+						.addParameter(readModelNode((Element) childNode));
 			}
 			if (childNode.getNodeName() == "primitive") {
-				prmConfig.addparametersPrimitif(readPrimitifNode((Element) childNode));
+				prmConfig
+						.addParameter(readPrimitifNode((Element) childNode));
 			}
 		}
 		return prmConfig;
 	}
-	
-	
+
+	/**
+	 * Read model node.
+	 *
+	 * @param entityNode
+	 *            the entity node
+	 * @return the prm model
+	 */
 	public PrmModel readModelNode(Element entityNode) {
-		PrmModel model= new PrmModel();
-		
+		PrmModel model = new PrmModel();
+
 		// recuperation du parents s'il existe
 		String nomModel = entityNode.getAttribute("name");
 		if (!nomModel.isEmpty() && nomModel != null) {
@@ -84,17 +111,23 @@ public class ParamParser {
 		String nomPackage = entityNode.getAttribute("package");
 		if (!nomPackage.isEmpty() && nomPackage != null) {
 			model.setPkg(nomPackage);
-		}else{
+		} else {
 			model.setPkg(null);
 		}
-		
-		
+
 		return model;
 	}
-	
+
+	/**
+	 * Read primitif node.
+	 *
+	 * @param entityNode
+	 *            the entity node
+	 * @return the prm primitif
+	 */
 	public PrmPrimitif readPrimitifNode(Element entityNode) {
-		PrmPrimitif primitif=new PrmPrimitif();
-		
+		PrmPrimitif primitif = new PrmPrimitif();
+
 		String nomPrimitif = entityNode.getAttribute("name");
 		if (!nomPrimitif.isEmpty() && nomPrimitif != null) {
 			primitif.setName(nomPrimitif);
@@ -102,7 +135,7 @@ public class ParamParser {
 		String nomPackage = entityNode.getAttribute("package");
 		if (!nomPackage.isEmpty() && nomPackage != null) {
 			primitif.setPkg(nomPackage);
-		}else{
+		} else {
 			primitif.setPkg(null);
 		}
 		String type = entityNode.getAttribute("type");
@@ -112,10 +145,10 @@ public class ParamParser {
 		String boolPrimitif = entityNode.getAttribute("primitif");
 		if (boolPrimitif.equals("true")) {
 			primitif.setPrimitif(true);
-		}else{
+		} else {
 			primitif.setPrimitif(false);
 		}
-		
+
 		return primitif;
 	}
 }

@@ -30,20 +30,40 @@ import org.xml.sax.SAXException;
 
 import java.util.logging.*;
 
+/**
+ * The Class MiniSpecParser.
+ */
 public class MiniSpecParser {
+
+	/** The document. */
 	Document document;
+
+	/** The entities. */
 	HashMap<String, MsEntity> entities;
+
+	/** List of minispec types mapped by their name */
 	HashMap<String, MsType> typesDef;
+
+	/** The unresolved objects. */
 	ArrayList<UnresolveObject> unresolvedObjects;
 
+	/** The current parsing entity. */
 	MsEntity currentEntity;
+
+	/** The current parsing model. */
 	MsModel currentModel;
 
-	/** CONSTRUCTOR **/
+	/**
+	 * Parser constructor.
+	 * 
+	 * @param xmlPath
+	 *            the xml path
+	 */
 	public MiniSpecParser(String xmlPath) {
 		super();
 
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		final DocumentBuilderFactory factory = DocumentBuilderFactory
+				.newInstance();
 
 		entities = new HashMap<String, MsEntity>();
 
@@ -60,20 +80,32 @@ public class MiniSpecParser {
 		}
 	}
 
-	/** GETTERS SETTERS **/
+	/**
+	 * Document getter.
+	 *
+	 * @return the document
+	 */
 	public Document getDocument() {
 		return document;
 	}
 
+	/**
+	 * Sets the doc.
+	 *
+	 * @param document
+	 *            the new doc
+	 */
 	public void setDoc(Document document) {
 		this.document = document;
 	}
 
 	/**
-	 * EXPORT
-	 * 
+	 * Generate the minispec model.
+	 *
+	 * @return The minispec model corresponding to the file
 	 * @throws Exception
-	 **/
+	 *             the exception
+	 */
 	public MsModel getMetaInstance() throws Exception {
 		MsModel mdl = readModelsNode(document.getDocumentElement()).get(0);
 		this.resolveTypes();
@@ -83,18 +115,23 @@ public class MiniSpecParser {
 		while (it.hasNext()) {
 			Object cle = it.next();
 
-		MsEntity valeur = this.entities.get(cle);
-		verifHeritage(valeur);
+			MsEntity valeur = this.entities.get(cle);
+			verifHeritage(valeur);
 		}
 		return mdl;
 	}
 
 	/**
-	 * READER METHODS
-	 * 
+	 * Read all models nodes.
+	 *
+	 * @param modelsNode
+	 *            the models node
+	 * @return the list of minispec models
 	 * @throws Exception
-	 **/
-	private ArrayList<MsModel> readModelsNode(Element modelsNode) throws Exception {
+	 *             the exception
+	 */
+	private ArrayList<MsModel> readModelsNode(Element modelsNode)
+			throws Exception {
 		ArrayList<MsModel> res = new ArrayList<MsModel>();
 		NodeList nl = modelsNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
@@ -107,6 +144,15 @@ public class MiniSpecParser {
 		return res;
 	}
 
+	/**
+	 * Read single model node.
+	 *
+	 * @param modelNode
+	 *            the model node
+	 * @return the minispec model
+	 * @throws Exception
+	 *             the exception
+	 */
 	public MsModel readModelNode(Element modelNode) throws Exception {
 
 		MsModel mdl = new MsModel(modelNode.getAttribute("name"));
@@ -125,8 +171,18 @@ public class MiniSpecParser {
 		return mdl;
 	}
 
+	/**
+	 * Read entity node.
+	 *
+	 * @param entityNode
+	 *            the entity node
+	 * @return the minispec entity
+	 * @throws Exception
+	 *             the exception
+	 */
 	public MsEntity readEntityNode(Element entityNode) throws Exception {
-		MsEntity entity = new MsEntity(entityNode.getAttribute("id"), currentModel);
+		MsEntity entity = new MsEntity(entityNode.getAttribute("id"),
+				currentModel);
 		entities.put(entity.getName(), entity);
 
 		// recuperation du parents s'il existe
@@ -152,36 +208,40 @@ public class MiniSpecParser {
 		return entity;
 	}
 
+	/**
+	 * Read attribute node.
+	 *
+	 * @param attributeNode
+	 *            the attribute node
+	 * @return the minispec attribute
+	 */
 	public MsAttribute readAttributeNode(Element attributeNode) {
-		MsAttribute attribute = new MsAttribute(attributeNode.getAttribute("name"), currentEntity);
-		
-		//gestion constructor method
-		if (attributeNode.getAttribute("constructor")!=null) {
+		MsAttribute attribute = new MsAttribute(
+				attributeNode.getAttribute("name"), currentEntity);
+
+		// gestion constructor method
+		if (attributeNode.getAttribute("constructor") != null) {
 			String val = attributeNode.getAttribute("constructor");
-			if(val.equals("true")){
+			if (val.equals("true")) {
 				attribute.setConstructor(true);
-			}else{
+			} else {
 				attribute.setConstructor(false);
 			}
-			
-		}else{
+
+		} else {
 			attribute.setConstructor(false);
 		}
-		if (attributeNode.getAttribute("method")!=null) {
+		if (attributeNode.getAttribute("method") != null) {
 			String val = attributeNode.getAttribute("method");
 			attribute.setMethod(val);
-		}else{
+		} else {
 			attribute.setMethod(null);
 		}
-		
-		
+
 		String typeName = attributeNode.getAttribute("type");
 		attribute.setType(new MsUnresolvedType(typeName));
 		this.unresolvedObjects.add(attribute);
 
-		
-		
-		
 		NodeList nl = attributeNode.getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++) {
 			Node childNode = nl.item(i);
@@ -191,13 +251,18 @@ public class MiniSpecParser {
 				String val = childNode.getTextContent();
 				attribute.setInitialValue(val);
 			}
-			
+
 		}
 
 		return attribute;
 	}
 
-	/** GESTION DES TYPES **/
+	/**
+	 * primitives initialisation.
+	 *
+	 * @param primitivesNames
+	 *            names of primitives defines by the user.
+	 */
 	public void setPrimitives(ArrayList<String> primitivesNames) {
 		for (String primName : primitivesNames) {
 			MsEntity primEntity = new MsEntity(primName, currentModel);
@@ -205,6 +270,14 @@ public class MiniSpecParser {
 		}
 	}
 
+	/**
+	 * Instantiate type with typedef node.
+	 *
+	 * @param typeDefNode
+	 *            the type def node
+	 * @throws Exception
+	 *             the exception
+	 */
 	private void instantiateType(Element typeDefNode) throws Exception {
 		MsCollection collection = null;
 		String _min = typeDefNode.getAttribute("min");
@@ -219,7 +292,8 @@ public class MiniSpecParser {
 			collection = new MsSet(type, min, max);
 		else if (typeDefNode.getNodeName() == "arraydef") {
 			if (_max == "")
-				throw new Exception("Attribute max absent de la defnition d array");
+				throw new Exception(
+						"Attribute max absent de la defnition d array");
 			collection = new MsArray(type, max);
 		}
 
@@ -230,9 +304,14 @@ public class MiniSpecParser {
 		this.unresolvedObjects.add(collection);
 	}
 
-	
-	private void verifHeritage(MsEntity entities){
-		
+	/**
+	 * Check if legacies are correctly build.
+	 *
+	 * @param entities
+	 *            the entities
+	 */
+	private void verifHeritage(MsEntity entities) {
+
 		MsType parent = entities.getParent();
 		if (parent != null) {
 			// gestion heritage circulaire
@@ -244,76 +323,44 @@ public class MiniSpecParser {
 					if (parentTypeName != null) {
 						if (parentTypeName.equals(entities.getName())) {
 							parentEntity.setParent(null);
-							System.out.println("Circularity Error : double héritage entre " + parentTypeName
-									+ " et " + parent.getTypeName());
+							System.out
+									.println("Circularity Error : double héritage entre "
+											+ parentTypeName
+											+ " et "
+											+ parent.getTypeName());
 						}
 					}
 				}
 			}
 
 			// gestion definition multiple
-			
+
 			for (MsAttribute attrib : entities.getAttributes()) {
-				MsAttribute attribDelete=null;
+				MsAttribute attribDelete = null;
 				for (MsAttribute attrib2 : parentEntity.getAttributes()) {
-					if(attrib.getName().equals(attrib2.getName())){
-						attribDelete=attrib2;
-						System.out.println("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+entities.getName()+" et "+parentEntity.getName());
-						
+					if (attrib.getName().equals(attrib2.getName())) {
+						attribDelete = attrib2;
+						System.out
+								.println("Multiple definition Error : l'attribut "
+										+ attrib.getName()
+										+ " est présent dans les classes "
+										+ entities.getName()
+										+ " et "
+										+ parentEntity.getName());
+
 					}
-				}if(attribDelete!=null){
-				parentEntity.getAttributes().remove(attribDelete);
+				}
+				if (attribDelete != null) {
+					parentEntity.getAttributes().remove(attribDelete);
 				}
 			}
-			verifHeritage(parentEntity);	
-		}
-	}
-	
-	private void verifHeritage() throws Exception {
-		Set cles = this.entities.keySet();
-		Iterator it = cles.iterator();
-		while (it.hasNext()) {
-			Object cle = it.next();
-
-			MsEntity fils = this.entities.get(cle);
-			// si l'entitée herite d'une autre entitée
-			MsType parent = fils.getParent();
-			if (parent != null) {
-				// gestion heritage circulaire
-				MsEntity parentEntity = this.entities.get(parent.getTypeName());
-				if (parentEntity != null) {
-					MsType typeParent = parentEntity.getParent();
-					if (typeParent != null) {
-						String parentTypeName = typeParent.getTypeName();
-						if (parentTypeName != null) {
-							if (parentTypeName.equals(cle)) {
-								parentEntity.setParent(null);
-								System.out.println("Circularity Error : double héritage entre " + parentTypeName
-										+ " et " + parent.getTypeName());
-							}
-						}
-					}
-				}
-
-				// gestion definition multiple
-				
-				for (MsAttribute attrib : parentEntity.getAttributes()) {
-					MsAttribute attribDelete=null;
-					for (MsAttribute attrib2 :fils.getAttributes() ) {
-						if(attrib.getName().equals(attrib2.getName())){
-							attribDelete=attrib2;
-							System.out.println("Multiple definition Error : l'attribut " + attrib2.getName()+" est présent dans les classes "+fils.getName()+" et "+parentEntity.getName());
-							
-						}
-					}if(attribDelete!=null){
-						fils.getAttributes().remove(attribDelete);
-					}
-				}
-					
-			}
+			verifHeritage(parentEntity);
 		}
 	}
 
+	/**
+	 * Resolve unresolved types.
+	 */
 	private void resolveTypes() {
 		for (UnresolveObject object : this.unresolvedObjects)
 			object.resolve(typesDef, entities);

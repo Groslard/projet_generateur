@@ -6,13 +6,26 @@ import generator.JavaVisitor;
 import parser.MiniSpecParser;
 import parser.ParamParser;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Generateur.
+ */
 public class Generateur {
-
-	static String xmlDirectory = "C:\\Users\\krabbos\\git\\projet_generateur\\src\\xmlExamples\\";
+	/** The xml directory. */
+	static String xmlDirectory = "C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\";
 	
-	static String minispecXML = "Test_4_Valeur_Initiale.xml";
+	/** The minispec xml. */
+	static String minispecXML = "Test_4_valeur_initiale.xml";
+	
+	/** The config xml. */
 	static String configXML = "imports.xml";
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws Exception the exception
+	 */
 	public static void main(String[] args) throws Exception {
 		/** On commence par parser le fichier de config **/
 		ParamParser paramParser= new ParamParser(xmlDirectory + configXML);

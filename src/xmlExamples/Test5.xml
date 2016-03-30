@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+	<model name="concession">
+		<entity id="Garage">
+			<listdef id="#1" type="Vehicule"/>	
+			<listdef id="#2" type="String"/>	
+			<attribute name="Vehicules" type="#1" constructor="true"/>
+			<attribute name="clients"  type="#2" constructor="true"/>
+		</entity>
+		
+		<entity id="Vehicule">
+			<attribute name="Marque" type="String"/>
+			<attribute name="Model" type="String"/>
+			<attribute name="Moteur" type="Moteur"/>
+		</entity>
+		
+		<entity id="Voiture" parent="Vehicule">
+			<attribute name="Annee" type="int"/>
+		</entity>
+		
+		<entity id="Moteur">
+			<attribute name="Model" type="String"/>
+			<attribute name="Puissance" type="int"/>
+		</entity>
+	</model>
+</models>

@@ -18,8 +18,8 @@
 		</entity>
 		<entity id="Phrase" >
 		<attribute name="maMot" type="Mot" constructor="true" />
-			<attribute name="Numero" type="String" >
-				<value>"salut"</value>
+			<attribute name="Numero" type="int" >
+				<value>10</value>
 			</attribute>				
 		</entity>
 		

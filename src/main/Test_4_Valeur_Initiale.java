@@ -4,10 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import GrosPaquet.Balise;
-import GrosPaquet.Coucou;
-import GrosPaquet.Mot;
-import GrosPaquet.Phrase;
+import Test4.Mot;
+import Test4.Phrase;
+
 
 public class Test_4_Valeur_Initiale {
 
@@ -23,7 +22,7 @@ public class Test_4_Valeur_Initiale {
 		// la valeur par defaut est saisie dans le fichier d'entity.xml (ici: Test_4_Valeur_Initiale)
 		
 		//1er cas l'attribut de type primitif a une valeur par default
-		assertEquals("salut", maphrase.getNumero());
+		assertEquals(10, maphrase.getNumero());
 		//2eme cas l'attribut de type primitif  na pas de valeur par defaut
 		assertEquals(null, monMot.getMonString());
 	  }

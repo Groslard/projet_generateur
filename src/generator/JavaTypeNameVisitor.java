@@ -9,61 +9,113 @@ import modelMiniSpec.MsReference;
 import modelMiniSpec.MsSet;
 import modelParameter.PrmConfig;
 
-public class JavaTypeNameVisitor extends Visitor{
+/**
+ * The Class JavaTypeNameVisitor.
+ */
+public class JavaTypeNameVisitor extends Visitor {
 
+	/** The result. */
 	private String result;
+
+	/** The conf. */
 	private PrmConfig conf;
-	
+
+	/**
+	 * Instantiates a new java type name visitor.
+	 *
+	 * @param conf
+	 *            the conf
+	 */
 	public JavaTypeNameVisitor(PrmConfig conf) {
 		super();
 		this.conf = conf;
-		this.result="";
+		this.result = "";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsReference)
+	 */
 	public void visit(MsReference msReference) {
-		
-		result+=msReference.getTypeName();
+
+		result += msReference.getTypeName();
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsList)
+	 */
 	public void visit(MsList msList) {
-		result+=conf.getParameterPrimitif(msList.getTypeName()).getType()+"<";
+		result += conf.getParameterPrimitif(msList.getTypeName()).getType()
+				+ "<";
 		msList.getType().accept(this);
-		result+=">";
-		
+		result += ">";
+
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsSet)
+	 */
 	public void visit(MsSet msSet) {
-		result+=conf.getParameterPrimitif(msSet.getTypeName()).getType()+"<";
+		result += conf.getParameterPrimitif(msSet.getTypeName()).getType()
+				+ "<";
 		msSet.getType().accept(this);
-		result+=">";
-		
+		result += ">";
+
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsArray)
+	 */
 	@Override
 	public void visit(MsArray array) {
-		result+=array.getType().getTypeName()+"[]";
-		
+		result += array.getType().getTypeName() + "[]";
+
 	}
-	
+
+	/**
+	 * Gets the result.
+	 *
+	 * @return the result
+	 */
 	public String getResult() {
 		String res = result;
 		result = "";
 		return res;
 	}
-	
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsModel)
+	 */
 	@Override
-	public void visit(MsModel o) {}
+	public void visit(MsModel o) {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsEntity)
+	 */
 	@Override
-	public void visit(MsEntity o) {}
+	public void visit(MsEntity o) {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see generator.Visitor#visit(modelMiniSpec.MsAttribute)
+	 */
 	@Override
 	public void visit(MsAttribute o) {
-		
-		
-	}
-	
 
-	
-	
+	}
+
 }

@@ -1,7 +1,7 @@
 <java>
-	<model name="toto" package="GrosPaquet"/>
+	<model name="toto" package="Test4"/>
 	<primitive name="String" type="String" primitif="true"/>
-	<primitive name="int" type="Integer" />
+	<primitive name="int" type="Integer" primitif="true"/>
 	<primitive name="list" type="ArrayList"  package="java.util.ArrayList"/>
 	<primitive name="set" type="HashSet" package="java.util.HashSet" />
 	<primitive name="array" type="Array"/>
