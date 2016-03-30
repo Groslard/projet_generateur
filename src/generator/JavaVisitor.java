@@ -48,6 +48,19 @@ public class JavaVisitor extends LangageVisitor {
 		}
 
 		dir.mkdir();
+		
+		/** CREATION DU REPOSITORY **/
+		repoImportBlock = "package " + mdl.getName() + "; \n\n";
+		repoImportBlock += "import generator.AbstractRepository;\n";
+		repoImportBlock += "import java.util.ArrayList;\n";
+		repoImportBlock += "import java.io.IOException;\n\n";
+		repoHeader = "public class " + mdl.getName() + "Repository extends AbstractRepository {\n";
+		repoMaterializeBlock = "\n\n\n\t@Override\n\tpublic void materialize(String path) throws IOException{\n";
+		repoMaterializeBlock += "\t\t" + mdl.getName() + "Repository temp = (" + mdl.getName() + "Repository) decodeFromFile(path);\n";
+		repoFooterBlock = "\n}";
+		repoDeclarationBlock = "";
+		repoMethodBlock = "";
+		
 		// parcours des entities du package
 		for (MsEntity entitie : o.getEntities()) {
 			importBlock = "";
@@ -67,6 +80,7 @@ public class JavaVisitor extends LangageVisitor {
 			listeclass.put(entitie.getName(),
 					importBlock + header +constructeurBLoc+ declarationBloc + methodBloc + collectionMethod +unImplementMethod + footer);
 		}
+		repoMaterializeBlock +="\n\t}";
 	}
 
 	@Override
@@ -94,6 +108,18 @@ public class JavaVisitor extends LangageVisitor {
 			importBlock += "import " + path + ";\n";
 
 		importBlock += "\n";
+		
+		/** REPOSITORY BUILDING **/
+		String varName = Character.toLowerCase(o.getName().charAt(0)) + o.getName().substring(1);
+		repoDeclarationBlock += "\tpublic ArrayList<"+o.getName()+"> " + varName +"s = new ArrayList<" + o.getName() + ">();\n";
+		
+		repoMethodBlock += "\n\tpublic void addInstance(" + o.getName() + " " + varName +"){\n";
+		repoMethodBlock += "\t\t" + varName+"s.add(" + varName +");\n\t}\n";
+		
+		repoMethodBlock += "\n\tpublic ArrayList<"+o.getName()+"> get" + o.getName() + "s(){\n";
+		repoMethodBlock += "\t\t return " + varName+"s;\n\t}\n";
+		
+		repoMaterializeBlock += "\t\tthis."+ varName+"s = temp." + varName + "s;\n";
 	}
 
 	@Override
@@ -270,6 +296,29 @@ public class JavaVisitor extends LangageVisitor {
 				} catch (Exception ex) {
 					/* ignore */}
 			}
+		}
+		
+		/** REPO BUILDING **/
+		Writer writer = null;
+		File file;
+		try {
+			String content = repoImportBlock + repoHeader + repoDeclarationBlock + repoMethodBlock + repoMaterializeBlock + repoFooterBlock;
+			String packageDir = conf.getPackageReference(mdl.getName());
+			if (packageDir != null) {
+				System.out.println("src/" + packageDir + "/" + mdl.getName() + "Repository.java");
+				file = new File("src/" + packageDir + "/" + mdl.getName() + "Repository.java");
+			} else {
+				file = new File("src/" + mdl.getName() + "/" + mdl.getName() + "Repository.java");
+			}
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
+			writer.write(content);
+		} catch (IOException ex) {
+			// report
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception ex) {
+				/* ignore */}
 		}
 
 		Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Files Generated");
