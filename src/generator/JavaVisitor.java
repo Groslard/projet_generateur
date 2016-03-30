@@ -125,7 +125,6 @@ public class JavaVisitor extends LangageVisitor {
 	@Override
 	public void visit(MsAttribute o) {
 		
-		System.out.println("nom attribut "+o.getName()+" constructor attribut:"+o.isConstructor()+ " method"+o.getMethod());
 		currentAttribute=o;
 		o.getType().accept(this);
 		o.getType().accept(typeNameVisitor);

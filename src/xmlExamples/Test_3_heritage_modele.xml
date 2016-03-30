@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+
+	<model name="toto">
+
+		
+		<listdef id="#3" type="String"/>
+		
+
+		<entity id="Balise">
+			<attribute name="monString" type="String" />
+		</entity>
+		<entity id="Coucou" parent="Balise">
+			<attribute name="Nom" type="String" />
+		</entity>
+		
+
+		<entity id="Livre" parent="#3">
+				
+			<attribute name="titreLivre" type="String" />
+		
+		</entity>
+		
+		
+		<entity id="Camion" parent="Vehicule">
+			<attribute name="NomVehicule" type="String" />
+		</entity>
+		<entity id="Vehicule" parent="Camion">
+			<attribute name="NomCamion" type="String" />
+		</entity>
+
+		<entity id="Fils" parent="Pere">
+			<attribute name="nomDefamille" type="String" />
+		</entity>
+
+		<entity id="Pere">
+			<attribute name="nomDefamille" type="String" />
+		</entity>
+
+	</model>
+</models>

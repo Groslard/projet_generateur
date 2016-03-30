@@ -297,16 +297,16 @@ public class MiniSpecParser {
 
 				// gestion definition multiple
 				
-				for (MsAttribute attrib : fils.getAttributes()) {
+				for (MsAttribute attrib : parentEntity.getAttributes()) {
 					MsAttribute attribDelete=null;
-					for (MsAttribute attrib2 : parentEntity.getAttributes()) {
+					for (MsAttribute attrib2 :fils.getAttributes() ) {
 						if(attrib.getName().equals(attrib2.getName())){
 							attribDelete=attrib2;
-							System.out.println("Multiple definition Error : l'attribut " + attrib.getName()+" est présent dans les classes "+fils.getName()+" et "+parentEntity.getName());
+							System.out.println("Multiple definition Error : l'attribut " + attrib2.getName()+" est présent dans les classes "+fils.getName()+" et "+parentEntity.getName());
 							
 						}
 					}if(attribDelete!=null){
-					parentEntity.getAttributes().remove(attribDelete);
+						fils.getAttributes().remove(attribDelete);
 					}
 				}
 					
