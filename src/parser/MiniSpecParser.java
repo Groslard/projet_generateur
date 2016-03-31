@@ -304,15 +304,18 @@ public class MiniSpecParser {
 		this.unresolvedObjects.add(collection);
 	}
 
+
 	/**
 	 * Check if legacies are correctly build.
 	 *
 	 * @param entities
 	 *            the entities
 	 */
-	private void verifHeritage(MsEntity entities) {
 
-		MsType parent = entities.getParent();
+	private void verifHeritage(MsEntity fils){
+		
+		MsType parent = fils.getParent();
+
 		if (parent != null) {
 			// gestion heritage circulaire
 			MsEntity parentEntity = this.entities.get(parent.getTypeName());
@@ -321,7 +324,7 @@ public class MiniSpecParser {
 				if (typeParent != null) {
 					String parentTypeName = typeParent.getTypeName();
 					if (parentTypeName != null) {
-						if (parentTypeName.equals(entities.getName())) {
+						if (parentTypeName.equals(fils.getName())) {
 							parentEntity.setParent(null);
 							System.out
 									.println("Circularity Error : double héritage entre "
@@ -335,28 +338,23 @@ public class MiniSpecParser {
 
 			// gestion definition multiple
 
-			for (MsAttribute attrib : entities.getAttributes()) {
-				MsAttribute attribDelete = null;
-				for (MsAttribute attrib2 : parentEntity.getAttributes()) {
-					if (attrib.getName().equals(attrib2.getName())) {
-						attribDelete = attrib2;
-						System.out
-								.println("Multiple definition Error : l'attribut "
-										+ attrib.getName()
-										+ " est présent dans les classes "
-										+ entities.getName()
-										+ " et "
-										+ parentEntity.getName());
-
+			for (MsAttribute attrib : parentEntity.getAttributes()) {
+				MsAttribute attribDelete=null;
+				for (MsAttribute attrib2 :fils.getAttributes() ) {
+					if(attrib.getName().equals(attrib2.getName())){
+						attribDelete=attrib2;
+						System.out.println("Multiple definition Error : l'attribut " + attrib2.getName()+" est présent dans les classes "+fils.getName()+" et "+parentEntity.getName());
+						
 					}
-				}
-				if (attribDelete != null) {
-					parentEntity.getAttributes().remove(attribDelete);
+				}if(attribDelete!=null){
+					fils.getAttributes().remove(attribDelete);
 				}
 			}
-			verifHeritage(parentEntity);
+			verifHeritage(parentEntity);	
 		}
 	}
+	
+
 
 	/**
 	 * Resolve unresolved types.

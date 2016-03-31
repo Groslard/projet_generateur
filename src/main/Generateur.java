@@ -18,6 +18,8 @@ public class Generateur {
 	static String minispecXML = "Test_4_valeur_initiale.xml";
 	
 	/** The config xml. */
+
+
 	static String configXML = "imports.xml";
 	
 	/**

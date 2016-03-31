@@ -61,7 +61,7 @@ public class Test_3_heritage_modele {
 
 		 /*************gestion de l'erreur  de définition multiple d'attribut********************/
 			// la classe Pere est fils on toutes les deux le meme attriuts nomDeFamille 
-			// règle de résolution l'attribut en doublon  est supprimé de la classe père
+			// règle de résolution l'attribut en doublon  est supprimé de la classe fils
 			Pere monPere= new Pere();
 			Fils monFils= new Fils();
 	  }
