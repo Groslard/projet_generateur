@@ -13,7 +13,7 @@
 			<attribute name="monString" type="String"/>
 			<attribute name="noms"  type="#4"/>
 			<attribute name="prenoms" type="#10"/>
-			<attribute name="numeros" type="#11"/>
+			<attribute name="numeros" type="#11" constructor="true" />
 		</entity>
 
 		<entity id="Jeux" >

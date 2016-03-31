@@ -16,6 +16,7 @@ public class JavaTypeNameVisitor extends Visitor {
 
 	/** The result. */
 	private String result;
+	private String constructor;
 
 	/** The conf. */
 	private PrmConfig conf;
@@ -30,6 +31,7 @@ public class JavaTypeNameVisitor extends Visitor {
 		super();
 		this.conf = conf;
 		this.result = "";
+		this.constructor = "";
 	}
 
 	/*
@@ -40,6 +42,7 @@ public class JavaTypeNameVisitor extends Visitor {
 	public void visit(MsReference msReference) {
 
 		result += msReference.getTypeName();
+		constructor = result+"()";
 	}
 
 	/*
@@ -52,6 +55,7 @@ public class JavaTypeNameVisitor extends Visitor {
 				+ "<";
 		msList.getType().accept(this);
 		result += ">";
+		constructor = result+"()";
 
 	}
 
@@ -65,6 +69,7 @@ public class JavaTypeNameVisitor extends Visitor {
 				+ "<";
 		msSet.getType().accept(this);
 		result += ">";
+		constructor = result+"()";
 
 	}
 
@@ -76,7 +81,7 @@ public class JavaTypeNameVisitor extends Visitor {
 	@Override
 	public void visit(MsArray array) {
 		result += array.getType().getTypeName() + "[]";
-
+		constructor = array.getType().getTypeName()+"["+array.getMax()+"]";
 	}
 
 	/**
@@ -87,6 +92,12 @@ public class JavaTypeNameVisitor extends Visitor {
 	public String getResult() {
 		String res = result;
 		result = "";
+		return res;
+	}
+	
+	public String getConstructor(){
+		String res = this.constructor;
+		this.constructor = "";
 		return res;
 	}
 

@@ -165,24 +165,28 @@ public class JavaVisitor extends LangageVisitor {
 		currentAttribute = o;
 		o.getType().accept(this);
 		o.getType().accept(typeNameVisitor);
-		declarationBloc += "\tprivate " + typeNameVisitor.getResult() + " "
-				+ (o.getName()).toLowerCase() + "; \n";
+		String typeVisitResult = typeNameVisitor.getResult();
+		String typeConstructor = typeNameVisitor.getConstructor();
+		declarationBloc += "\tprivate " + typeVisitResult + " "+ (o.getName()).toLowerCase() + "; \n";
+		
+		//cas  attribut primitif possedant une valeur par defaut 
 		if (conf.isPrimitif(o.getType().getTypeName())
 				&& o.getInitialValue() != null) {
 			constructeurBLoc += "\n \t this." + o.getName().toLowerCase() + "="
 					+ o.getInitialValue() + ";\n";
-		} else if (o.getMethod() != null && !o.getMethod().isEmpty()) {
+		} //cas l'attribut est initialiser par une fonction
+		else if (o.getMethod() != null && !o.getMethod().isEmpty()) {
 			// faire la construction de la methode si elle n'existe pas
-			o.getType().accept(typeNameVisitor);
 			constructeurBLoc += "\n \t this." + o.getName().toLowerCase() + "="
 					+ o.getMethod() + "();\n";
-			unImplementMethod += "\t public " + typeNameVisitor.getResult()
+			unImplementMethod += "\t public " + typeConstructor
 					+ " " + o.getMethod() + "(){\n\t return null;\n}";
-		} else if (!conf.isPrimitif(o.getType().getTypeName())
+			
+		}//cas l'attribut est initialiser par son contrcteur
+		else if (!conf.isPrimitif(o.getType().getTypeName())
 				&& o.isConstructor()) {
-			o.getType().accept(typeNameVisitor);
 			constructeurBLoc += "\n \t this." + o.getName().toLowerCase()
-					+ "= new " + typeNameVisitor.getResult() + "();\n";
+					+ "= new " + typeConstructor + ";\n";
 
 		}
 
@@ -329,9 +333,9 @@ public class JavaVisitor extends LangageVisitor {
 		add += "\tpublic void add"
 				+ currentAttribute.getName().substring(0, 1).toUpperCase()
 				+ currentAttribute.getName().substring(1) + "(int index, "
-				+ chaineNom + " val){\n\t\t";
+				+ chaineNom + " val){\n\t\tif(index<"+o.getMax()+")";
 
-		add += "\tthis." + currentAttribute.getName().toLowerCase()
+		add += "\n\t\tthis." + currentAttribute.getName().toLowerCase()
 				+ "[index]=val;\n\t}\n\n";
 		return add;
 	}

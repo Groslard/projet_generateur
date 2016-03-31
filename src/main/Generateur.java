@@ -12,10 +12,10 @@ import parser.ParamParser;
  */
 public class Generateur {
 	/** The xml directory. */
-	static String xmlDirectory = "C:\\Users\\anthony\\git\\projet_generateur\\src\\xmlExamples\\";
+	static String xmlDirectory = "C:\\Users\\Krabbos\\git\\projet_generateur\\src\\xmlExamples\\";
 	
 	/** The minispec xml. */
-	static String minispecXML = "Test_4_valeur_initiale.xml";
+	static String minispecXML = "Test_2_Association.xml";
 	
 	/** The config xml. */
 
